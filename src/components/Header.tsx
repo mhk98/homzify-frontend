@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useCallback, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { navItems as staticNavItems, NavItem, Product } from "@/data/products";
+import { NavItem, Product } from "@/data/products";
 import { fetchNavItems } from "@/services/menuService";
 import { fetchStorefrontProducts } from "@/services/productService";
 import { fetchSiteSettings } from "@/services/settingService";
@@ -11,8 +11,8 @@ import { useCart } from "@/context/CartContext";
 import { useCustomer } from "@/context/CustomerContext";
 import { trackPixelEvent } from "@/lib/pixel";
 
-const PRIMARY = "#B68A35";
-const SECONDARY = "#001B54";
+const PRIMARY   = "#ED145B";   // hot-pink — border, icons
+const SECONDARY = "#6620EE";   // purple  — nav bg, cart badge, dropdown hover
 
 interface HeaderProps {
   logoUrl?: string | null;
@@ -32,7 +32,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
   const [openDrop,      setOpenDrop]      = useState<string | null>(null);
   const [mobileExpand,  setMobileExpand]  = useState<string | null>(null);
   const [search,        setSearch]        = useState("");
-  const [navItems,      setNavItems]      = useState<NavItem[]>(staticNavItems);
+  const [navItems,      setNavItems]      = useState<NavItem[]>([]);
   const [resolvedLogo,  setResolvedLogo]  = useState<string | null>(logoUrl || null);
   // Search dropdown
   const [allProducts,   setAllProducts]   = useState<Product[]>([]);
@@ -134,10 +134,10 @@ function HeaderInner({ logoUrl }: HeaderProps) {
   }, []);
 
   return (
-    <header className="w-full sticky top-0 z-50" style={{ boxShadow: "0 8px 24px rgba(11,11,10,0.08)" }}>
+    <header className="w-full sticky top-0 z-50 shadow-md">
 
       {/* ── Logo / Search / Cart bar ── */}
-      <div className="bg-white" style={{ borderBottom: "1px solid rgba(182,138,53,0.18)" }}>
+      <div className="bg-white border-b border-gray-100">
 
         {/* ══ MOBILE layout (< md): 2 rows ══ */}
         <div className="md:hidden">
@@ -153,7 +153,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
 
             {/* Logo — centered */}
             <Link href="/" style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-              <div style={{ position: "relative", width: 126, height: 52 }}>
+              <div style={{ position: "relative", width: 110, height: 44 }}>
                 {resolvedLogo && (
                   <img src={resolvedLogo} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                 )}
@@ -164,7 +164,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
             <div ref={cartRef} className="relative" style={{ flexShrink: 0 }}>
               <button
                 onClick={() => setCartOpen((o) => !o)}
-                className="flex items-center text-gray-600 hover:text-[#B68A35] transition-colors"
+                className="flex items-center text-gray-600 hover:text-[#ED145B] transition-colors"
                 style={{ background: "none", border: "none", cursor: "pointer", padding: 4, position: "relative" }}
               >
                 <div className="relative">
@@ -219,9 +219,9 @@ function HeaderInner({ logoUrl }: HeaderProps) {
 
           {/* Row 2: Search bar — full width */}
           <div style={{ padding: "0 14px 10px", position: "relative" }} ref={mobileSearchRef}>
-            <div style={{ display: "flex", alignItems: "center", height: 42, border: `1px solid ${PRIMARY}`, borderRadius: 50, overflow: "hidden", background: "#fff", boxShadow: "0 4px 14px rgba(182,138,53,0.08)" }}>
+            <div style={{ display: "flex", alignItems: "center", height: 40, border: `2px solid ${PRIMARY}`, borderRadius: 50, overflow: "hidden" }}>
               <button
-                style={{ width: 44, height: "100%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", border: "none", flexShrink: 0, cursor: "pointer" }}
+                style={{ width: 44, height: "100%", background: "#f7f7f7", display: "flex", alignItems: "center", justifyContent: "center", border: "none", flexShrink: 0, cursor: "pointer" }}
                 onClick={() => search.trim() && setSearchOpen((o) => !o)}
               >
                 <svg width={18} height={18} fill="none" stroke={PRIMARY} strokeWidth={2.5} viewBox="0 0 24 24">
@@ -235,7 +235,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
                 onFocus={loadProducts}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key === "Escape" && setSearchOpen(false)}
-                style={{ flex: 1, height: "100%", background: "#fff", border: "none", outline: "none", padding: "0 10px", fontSize: 13, color: "#555" }}
+                style={{ flex: 1, height: "100%", background: "#f7f7f7", border: "none", outline: "none", padding: "0 10px", fontSize: 13, color: "#555" }}
               />
               {search && (
                 <button onClick={() => { setSearch(""); setSearchOpen(false); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "0 10px", color: "#999", flexShrink: 0, fontSize: 18, lineHeight: 1 }}>×</button>
@@ -277,7 +277,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
         <div className="hidden md:grid header-logo-bar" style={{ gap: 0 }}>
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <div style={{ position: "relative", width: "100%", maxWidth: 285, height: 76 }}>
+            <div style={{ position: "relative", width: "100%", maxWidth: 260, height: 70 }}>
               {resolvedLogo && (
                 <img src={resolvedLogo} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "left center" }} />
               )}
@@ -286,9 +286,9 @@ function HeaderInner({ logoUrl }: HeaderProps) {
 
           {/* Search */}
           <div style={{ padding: "0 11px", position: "relative" }} ref={searchRef}>
-            <div style={{ display: "flex", alignItems: "center", height: 46, border: `1px solid ${PRIMARY}`, borderRadius: 50, overflow: "hidden", background: "#fff", boxShadow: "0 6px 18px rgba(182,138,53,0.09)" }}>
+            <div style={{ display: "flex", alignItems: "center", height: 44, border: `2px solid ${PRIMARY}`, borderRadius: 50, overflow: "hidden" }}>
               <button
-                style={{ width: "12%", height: "100%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", border: "none", flexShrink: 0, cursor: "pointer" }}
+                style={{ width: "12%", height: "100%", background: "#f7f7f7", display: "flex", alignItems: "center", justifyContent: "center", border: "none", flexShrink: 0, cursor: "pointer" }}
                 onClick={() => search.trim() && setSearchOpen((o) => !o)}
               >
                 <svg width={20} height={20} fill="none" stroke={PRIMARY} strokeWidth={2.5} viewBox="0 0 24 24">
@@ -302,7 +302,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
                 onFocus={loadProducts}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key === "Escape" && setSearchOpen(false)}
-                style={{ width: "90%", height: "100%", background: "#fff", border: "none", outline: "none", padding: "0 12px", fontSize: 12, color: "#555" }}
+                style={{ width: "90%", height: "100%", background: "#f7f7f7", border: "none", outline: "none", padding: "0 12px", fontSize: 12, color: "#555" }}
               />
               {search && (
                 <button onClick={() => { setSearch(""); setSearchOpen(false); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "0 10px", color: "#999", flexShrink: 0, fontSize: 18, lineHeight: 1 }}>×</button>
@@ -340,7 +340,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
 
           {/* Right icons */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 20 }}>
-            <Link href="/track-order" className="hidden md:flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#B68A35] transition-colors">
+            <Link href="/track-order" className="hidden md:flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#ED145B] transition-colors">
               <svg width={24} height={24} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
                 <rect x="1" y="3" width="15" height="13" rx="1" /><path d="M16 8h4l3 3v5h-7V8z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
               </svg>
@@ -348,12 +348,12 @@ function HeaderInner({ logoUrl }: HeaderProps) {
             </Link>
 
             {isLoggedIn ? (
-              <button onClick={customerLogout} className="hidden sm:flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#B68A35] transition-colors" style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+              <button onClick={customerLogout} className="hidden sm:flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#ED145B] transition-colors" style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
                 <svg width={24} height={24} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg>
                 <span style={{ fontSize: 11 }}>Logout</span>
               </button>
             ) : (
-              <Link href="/login" className="hidden sm:flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#B68A35] transition-colors">
+              <Link href="/login" className="hidden sm:flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#ED145B] transition-colors">
                 <svg width={24} height={24} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                 <span style={{ fontSize: 11 }}>Login</span>
               </Link>
@@ -361,7 +361,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
 
             {/* Cart with hover dropdown */}
             <div ref={cartRef} className="relative" onMouseEnter={() => setCartOpen(true)} onMouseLeave={() => setCartOpen(false)}>
-              <button className="flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#B68A35] transition-colors">
+              <button className="flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#ED145B] transition-colors">
                 <div className="relative">
                   <svg width={26} height={26} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
                     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
@@ -413,7 +413,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
       </div>
 
       {/* ── Navigation bar ── */}
-      <nav style={{ backgroundColor: SECONDARY, borderTop: "1px solid rgba(182,138,53,0.24)", borderBottom: "1px solid rgba(182,138,53,0.24)" }} ref={navRef}>
+      <nav style={{ backgroundColor: SECONDARY }} ref={navRef}>
         <div style={{ width: "90%", margin: "0 auto" }}>
 
           {/* Desktop nav — justify-evenly so equal gap between AND at edges */}
@@ -433,10 +433,9 @@ function HeaderInner({ logoUrl }: HeaderProps) {
                     href={`/?menu=${encodeURIComponent(item.label)}`}
                     className="flex items-center gap-1 text-white uppercase font-semibold whitespace-nowrap transition-colors hover:opacity-80"
                     style={{
-                      fontSize: 12,
-                      padding: "16px 6px",
+                      fontSize: 13,
+                      padding: "18px 6px",
                       display: "flex",
-                      letterSpacing: "0.035em",
                       borderBottom: isActive ? `3px solid ${PRIMARY}` : "3px solid transparent",
                     }}
                   >

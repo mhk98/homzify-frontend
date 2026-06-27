@@ -76,7 +76,7 @@ export default async function Home({
   const isFiltered = Boolean(menu);
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "var(--brand-surface)" }}>
+    <div className="min-h-screen flex flex-col bg-gray-100">
       <MarqueeBanner text={settings.marqueeText ?? null} />
       <Header logoUrl={settings.logoUrl ?? null} />
       <main className="flex-1">
@@ -88,7 +88,7 @@ export default async function Home({
           <div style={{ width: "90%", margin: "16px auto 0" }}>
             <Link
               href="/"
-              style={{ fontSize: 13, color: "#8F6A25", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}
+              style={{ fontSize: 13, color: "#6620EE", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}
             >
               ← সব পণ্য দেখুন
             </Link>

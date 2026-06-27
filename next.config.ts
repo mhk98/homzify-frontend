@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://api.digitalever.com.bd";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.homzify.net";
 
 const nextConfig: NextConfig = {
   async rewrites() {

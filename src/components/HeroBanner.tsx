@@ -34,17 +34,7 @@ export default function HeroBanner({ slides: slidesProp, sideBanners: sideProp }
         <div className="hero-banner-wrapper">
 
           {/* ── Main slider ── */}
-          <div
-            style={{
-              flex: 1,
-              position: "relative",
-              overflow: "hidden",
-              borderRadius: 8,
-              border: "1px solid rgba(182,138,53,0.22)",
-              boxShadow: "0 18px 45px rgba(11,11,10,0.12)",
-              background: "#001B54",
-            }}
-          >
+          <div style={{ flex: 1, position: "relative", overflow: "hidden", borderRadius: 6 }}>
             {slide.linkUrl ? (
               <a href={slide.linkUrl} target="_blank" rel="noreferrer" style={{ display: "block", width: "100%", height: "100%", position: "relative" }}>
                 <Image src={slide.file} alt={slide.alt} fill style={{ objectFit: "cover", objectPosition: "center" }} unoptimized priority />
@@ -52,17 +42,6 @@ export default function HeroBanner({ slides: slidesProp, sideBanners: sideProp }
             ) : (
               <Image src={slide.file} alt={slide.alt} fill style={{ objectFit: "cover", objectPosition: "center" }} unoptimized priority />
             )}
-
-            <div
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(90deg, rgba(11,11,10,0.22), rgba(11,11,10,0.04) 52%, rgba(182,138,53,0.12)), linear-gradient(180deg, rgba(255,255,255,0.04), rgba(11,11,10,0.12))",
-                pointerEvents: "none",
-              }}
-            />
 
             {/* Dot indicators */}
             {slides.length > 1 && (
@@ -75,8 +54,8 @@ export default function HeroBanner({ slides: slidesProp, sideBanners: sideProp }
                       borderRadius: 99,
                       width: i === current ? 24 : 10,
                       height: 10,
-                      background: i === current ? "#B68A35" : "rgba(255,255,255,0.65)",
-                      border: "1px solid rgba(255,255,255,0.35)",
+                      background: i === current ? "#fff" : "rgba(255,255,255,0.45)",
+                      border: "none",
                       cursor: "pointer",
                       padding: 0,
                       transition: "all 0.3s",
@@ -90,7 +69,7 @@ export default function HeroBanner({ slides: slidesProp, sideBanners: sideProp }
             {slides.length > 1 && (
               <button
                 onClick={() => setCurrent((c) => (c - 1 + slides.length) % slides.length)}
-                style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", width: 38, height: 38, borderRadius: "50%", border: "1px solid rgba(182,138,53,0.36)", background: "rgba(0,27,84,0.72)", color: "#fff", fontSize: 24, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10 }}
+                style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", width: 40, height: 40, borderRadius: "50%", border: "none", background: "rgba(0,0,0,0.35)", color: "#fff", fontSize: 24, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10 }}
               >‹</button>
             )}
 
@@ -98,7 +77,7 @@ export default function HeroBanner({ slides: slidesProp, sideBanners: sideProp }
             {slides.length > 1 && (
               <button
                 onClick={() => setCurrent((c) => (c + 1) % slides.length)}
-                style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", width: 38, height: 38, borderRadius: "50%", border: "1px solid rgba(182,138,53,0.36)", background: "rgba(0,27,84,0.72)", color: "#fff", fontSize: 24, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10 }}
+                style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", width: 40, height: 40, borderRadius: "50%", border: "none", background: "rgba(0,0,0,0.35)", color: "#fff", fontSize: 24, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10 }}
               >›</button>
             )}
           </div>
@@ -112,7 +91,7 @@ export default function HeroBanner({ slides: slidesProp, sideBanners: sideProp }
                   href={b.linkUrl || "#"}
                   target={b.linkUrl ? "_blank" : "_self"}
                   rel="noreferrer"
-                  style={{ flex: 1, position: "relative", overflow: "hidden", borderRadius: 8, display: "block", border: "1px solid rgba(182,138,53,0.22)", boxShadow: "0 12px 28px rgba(11,11,10,0.1)" }}
+                  style={{ flex: 1, position: "relative", overflow: "hidden", borderRadius: 6, display: "block" }}
                   className="group"
                   onClick={b.linkUrl ? undefined : (e) => e.preventDefault()}
                 >
@@ -123,14 +102,6 @@ export default function HeroBanner({ slides: slidesProp, sideBanners: sideProp }
                     style={{ objectFit: "cover", objectPosition: "center" }}
                     className="group-hover:scale-105 transition-transform duration-300"
                     unoptimized
-                  />
-                  <span
-                    aria-hidden="true"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      background: "linear-gradient(90deg, rgba(11,11,10,0.12), rgba(182,138,53,0.12))",
-                    }}
                   />
                 </a>
               ))}
@@ -148,7 +119,7 @@ export default function HeroBanner({ slides: slidesProp, sideBanners: sideProp }
                 target={b.linkUrl ? "_blank" : "_self"}
                 rel="noreferrer"
                 className="group"
-                style={{ flex: 1, position: "relative", height: 85, overflow: "hidden", borderRadius: 8, display: "block", border: "1px solid rgba(182,138,53,0.22)" }}
+                style={{ flex: 1, position: "relative", height: 85, overflow: "hidden", borderRadius: 6, display: "block" }}
                 onClick={b.linkUrl ? undefined : (e) => e.preventDefault()}
               >
                 <Image
@@ -158,14 +129,6 @@ export default function HeroBanner({ slides: slidesProp, sideBanners: sideProp }
                   style={{ objectFit: "cover", objectPosition: "center" }}
                   className="group-hover:scale-105 transition-transform duration-300"
                   unoptimized
-                />
-                <span
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: "linear-gradient(90deg, rgba(11,11,10,0.12), rgba(182,138,53,0.12))",
-                  }}
                 />
               </a>
             ))}

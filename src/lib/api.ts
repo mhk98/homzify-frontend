@@ -1,5 +1,4 @@
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://api.digitalever.com.bd";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.homzify.net";
 
 // Server-side Node.js fetch needs absolute URL; browser uses relative (goes through Next.js rewrites)
 export const BASE =
@@ -30,8 +29,11 @@ export async function apiFetch<T>(
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
-  if (externalSignal)
-    externalSignal.addEventListener("abort", () => controller.abort());
+  const abort = () => controller.abort();
+  if (externalSignal) {
+    if (externalSignal.aborted) abort();
+    else externalSignal.addEventListener("abort", abort, { once: true });
+  }
 
   try {
     const res = await fetch(urlStr, {
@@ -45,5 +47,6 @@ export async function apiFetch<T>(
     return json;
   } finally {
     clearTimeout(timer);
+    externalSignal?.removeEventListener("abort", abort);
   }
 }

@@ -83,7 +83,7 @@ export async function fetchSiteSettings(): Promise<SiteSetting> {
       email:              d.email              || d.hotMail || null,
       whatsappNumber:     d.whatsappNumber     || null,
       mapLink:            d.mapLink            || null,
-      copyrightText:      d.copyrightText      || d.footer?.copyrightText || null,
+      copyrightText:      d.copyrightText      || null,
       facebookUrl:        d.facebookUrl        || null,
       instagramUrl:       d.instagramUrl       || null,
       youtubeUrl:         d.youtubeUrl         || null,
@@ -93,7 +93,7 @@ export async function fetchSiteSettings(): Promise<SiteSetting> {
       twitterUrl:         d.twitterUrl         || d.xUrl || null,
       linkedinUrl:        d.linkedinUrl        || null,
       tiktokUrl:          d.tiktokUrl          || null,
-      deliveryPartnerUrl: toUrl(d.deliveryPartnerFile || d.footer?.deliveryPartnerFile),
+      deliveryPartnerUrl: toUrl(d.deliveryPartnerFile),
     };
   } catch {
     return empty;

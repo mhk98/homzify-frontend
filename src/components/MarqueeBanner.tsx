@@ -1,9 +1,5 @@
 import Link from "next/link";
 
-const DEFAULT_MARQUEE =
-  "আপনার ব্যবসার জন্য কাস্টমাইজড, স্কেলেবল এবং পেশাদার ই-কমার্স সল্যুশন তৈরি করতে প্রতিশ্রুতিবদ্ধ।   ★   " +
-  "Best level ecommerce in Bangladesh   ★   Free Shipping on selected products";
-
 const topLinks = [
   { label: "Login / Sign Up", href: "/login" },
   { label: "Order Track", href: "/track-order" },
@@ -15,12 +11,14 @@ interface Props {
 }
 
 export default function MarqueeBanner({ text }: Props) {
+  if (!text?.trim()) return null;
+
   // Duplicate text so the marquee scrolls continuously
-  const display = (text || DEFAULT_MARQUEE) + "   ★   " + (text || DEFAULT_MARQUEE) + "   ★   ";
+  const display = text + "   ★   " + text + "   ★   ";
   return (
     <div
       className="hidden sm:flex items-center"
-      style={{ background: "#001B54", height: 50 }}
+      style={{ background: "rgba(0,119,204,0.97)", height: 50 }}
     >
       <div style={{ width: "90%", margin: "0 auto" }} className="flex items-center justify-between gap-4 overflow-hidden">
         {/* Scrolling marquee text */}
@@ -38,10 +36,10 @@ export default function MarqueeBanner({ text }: Props) {
             <Link
               key={label}
               href={href}
-              className="text-white font-medium flex items-center justify-center rounded transition-colors hover:bg-[#B68A35]"
+              className="text-white font-medium flex items-center justify-center rounded transition-colors hover:bg-blue-800"
               style={{
                 fontSize: 12,
-                border: "1px solid rgba(182,138,53,0.68)",
+                border: "2px solid hsla(0,0%,100%,0.5)",
                 borderRadius: 5,
                 height: 30,
                 padding: "0 8px",

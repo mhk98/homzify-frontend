@@ -25,49 +25,7 @@ export interface ProductReview {
 
 function toImgUrl(file: string | null | undefined): string {
   if (!file) return "/placeholder.jpg";
-  return file.startsWith("http") || file.startsWith("data:") ? file : `${IMAGES}/${file}`;
-}
-
-function isGeneratedPlaceholder(file: string | null | undefined): boolean {
-  if (!file) return true;
-  return file.startsWith("data:image/svg+xml") || file.includes("placeholder");
-}
-
-function realPhotoQuery(item: ApiProduct): string {
-  const name = item.name.toLowerCase();
-  const category = (item.category || "").toLowerCase();
-
-  if (name.includes("hijab")) return "hijab,scarf,fashion";
-  if (name.includes("khimar")) return "hijab,modest,fashion";
-  if (name.includes("abaya")) return "abaya,modest,fashion";
-  if (name.includes("panjabi")) return "kurta,panjabi,clothing";
-  if (name.includes("tupi") || name.includes("cap")) return "kufi,hat";
-
-  if (name.includes("tasbih")) return "tasbih,prayer,beads";
-  if (name.includes("jainamaz") || name.includes("janamaz")) return "prayer,rug";
-
-  if (name.includes("quran")) return "quran,islamic,book";
-  if (name.includes("tafsir")) return "quran,books,islamic";
-  if (name.includes("dua")) return "islamic,book,dua";
-  if (name.includes("book") || category.includes("book")) return "islamic,books";
-
-  if (name.includes("rose")) return "perfume,bottle";
-  if (name.includes("oud")) return "perfume,bottle";
-  if (name.includes("musk")) return "perfume,bottle";
-  if (name.includes("attar") || name.includes("perfume") || name.includes("fragrance")) {
-    return "perfume,bottle,luxury";
-  }
-
-  if (category.includes("modest")) return "modest,fashion";
-  if (category.includes("prayer")) return "islamic,prayer";
-  if (category.includes("attar") || category.includes("perfume")) return "perfume,bottle";
-
-  return "product,photography";
-}
-
-function realPhotoUrl(item: ApiProduct, offset = 0): string {
-  const lock = Math.max(1, Number(item.Id || 1) + offset);
-  return `https://loremflickr.com/900/900/${realPhotoQuery(item)}?lock=${lock}`;
+  return file.startsWith("http") ? file : `${IMAGES}/${file}`;
 }
 
 function toBoolean(value: unknown): boolean {
@@ -104,10 +62,8 @@ function mapToProduct(item: ApiProduct): Product {
     originalPrice,
     discountedPrice,
     discount,
-    image: isGeneratedPlaceholder(item.file) ? realPhotoUrl(item) : toImgUrl(item.file),
-    gallery: (item.gallery || []).map((f, index) =>
-      isGeneratedPlaceholder(f) ? realPhotoUrl(item, index + 100) : toImgUrl(f),
-    ),
+    image: toImgUrl(item.file),
+    gallery: (item.gallery || []).map((f) => toImgUrl(f)),
     features: item.features || [],
     sku: item.sku ?? null,
     freeShipping: toBoolean(item.freeShipping),

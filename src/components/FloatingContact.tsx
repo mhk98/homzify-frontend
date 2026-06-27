@@ -110,12 +110,12 @@ export default function FloatingContact({ settings }: Props) {
         </div>
       )}
 
-      {/* Close button */}
+      {/* Close button — red X (shown when open) */}
       {open && (
         <button
           onClick={() => setOpen(false)}
           className="flex items-center justify-center text-white hover:opacity-90 transition-opacity shadow-lg"
-          style={{ width: 48, height: 48, borderRadius: "50%", backgroundColor: "#001B54" }}
+          style={{ width: 48, height: 48, borderRadius: "50%", backgroundColor: "#ED145B" }}
         >
           <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
             <path d="M18 6L6 18M6 6l12 12"/>
@@ -128,7 +128,7 @@ export default function FloatingContact({ settings }: Props) {
         <button
           onClick={() => setOpen(true)}
           className="flex items-center justify-center text-white hover:opacity-90 transition-opacity shadow-xl"
-          style={{ width: 52, height: 52, borderRadius: "50%", backgroundColor: "#B68A35" }}
+          style={{ width: 52, height: 52, borderRadius: "50%", backgroundColor: "#ED145B" }}
           title="Contact Us"
         >
           <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">

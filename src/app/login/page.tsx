@@ -9,8 +9,8 @@ import { apiFetch } from "@/lib/api";
 import { ApiResponse } from "@/types/api";
 import { useCustomer } from "@/context/CustomerContext";
 
-const PRIMARY = "#B68A35";
-const SECONDARY = "#001B54";
+const PRIMARY = "#ED145B";
+const SECONDARY = "#6620EE";
 
 type Mode = "login" | "register";
 

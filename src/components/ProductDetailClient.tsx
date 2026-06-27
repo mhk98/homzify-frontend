@@ -304,8 +304,8 @@ import {
   type ProductReview,
 } from "@/services/productService";
 
-const PRIMARY = "#B68A35";
-const SECONDARY = "#001B54";
+const PRIMARY = "#ED145B";
+const SECONDARY = "#6620EE";
 
 const fmt = (v: number) => v.toLocaleString("en-US");
 
@@ -456,7 +456,7 @@ export default function ProductDetailClient({
           style={{ marginBottom: "1rem" }}
           className="mb-4 flex flex-wrap items-center gap-1 text-base text-gray-500"
         >
-          <Link href="/" className="transition hover:text-[#B68A35]">
+          <Link href="/" className="transition hover:text-purple-600">
             Home
           </Link>
 
@@ -465,7 +465,7 @@ export default function ProductDetailClient({
               <span>/</span>
               <Link
                 href={`/?menu=${encodeURIComponent(product.category)}`}
-                className="capitalize transition hover:text-[#B68A35]"
+                className="capitalize transition hover:text-purple-600"
               >
                 {product.category}
               </Link>
@@ -479,7 +479,7 @@ export default function ProductDetailClient({
                 href={`/?menu=${encodeURIComponent(
                   product.category ?? "",
                 )}&sub=${encodeURIComponent(product.subCategory)}`}
-                className="capitalize transition hover:text-[#B68A35]"
+                className="capitalize transition hover:text-purple-600"
               >
                 {product.subCategory}
               </Link>
@@ -514,7 +514,7 @@ export default function ProductDetailClient({
             <span
               className="inline-flex items-center px-3 py-[7px] text-sm font-bold text-white"
               style={{
-                background: "#8F6A25",
+                background: "#fb7d3a",
                 clipPath:
                   "polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%)",
                 padding: "6px 24px 6px 10px",

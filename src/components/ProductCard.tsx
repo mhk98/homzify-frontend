@@ -8,8 +8,8 @@ import { useCart } from "@/context/CartContext";
 import { useCustomer } from "@/context/CustomerContext";
 import { trackPixelEvent } from "@/lib/pixel";
 
-const PRIMARY = "#B68A35";
-const SECONDARY = "#001B54";
+const PRIMARY   = "#ED145B";
+const SECONDARY = "#6620EE";
 const formatPrice = (value: number) => value.toLocaleString("en-US");
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -46,12 +46,12 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <>
-      <div className="premium-product-card group relative flex h-full flex-col overflow-hidden" style={{ borderRadius: 6 }}>
+      <div className="bg-white group relative flex h-full flex-col overflow-hidden border border-[#d9d9d9] transition-shadow hover:shadow-md" style={{ borderRadius: 4 }}>
 
         {product.inStock === false && (
           <span
             className="absolute z-10 text-white font-bold leading-tight"
-            style={{ top: 8, left: 8, background: "#6b7280", borderRadius: 999, padding: "3px 8px", fontSize: 9 }}
+            style={{ top: 6, left: 6, background: "#6b7280", borderRadius: 999, padding: "2px 7px", fontSize: 10 }}
           >
             Stock Out
           </span>
@@ -60,7 +60,7 @@ export default function ProductCard({ product }: { product: Product }) {
         {product.inStock !== false && product.discount > 0 && (
           <span
             className="absolute z-10 text-white font-bold leading-tight"
-            style={{ top: 8, left: 8, background: SECONDARY, borderRadius: 999, padding: "3px 8px", fontSize: 9 }}
+            style={{ top: 6, left: 6, background: SECONDARY, borderRadius: 999, padding: "2px 7px", fontSize: 10 }}
           >
             -{product.discount}%
           </span>
@@ -69,19 +69,19 @@ export default function ProductCard({ product }: { product: Product }) {
         {product.freeShipping && (
           <span
             className="absolute z-10 text-white font-bold leading-tight"
-            style={{ top: 8, right: 8, background: PRIMARY, padding: "3px 8px", borderRadius: 999, fontSize: 8 }}
+            style={{ top: 6, right: 0, background: PRIMARY, padding: "2px 7px", borderRadius: "4px 0 0 4px", fontSize: 9 }}
           >
             Free Shipping
           </span>
         )}
 
         <Link href={`/product/${product.id}`} className="block overflow-hidden">
-          <div className="premium-product-media relative w-full overflow-hidden" style={{ aspectRatio: "1 / 1" }}>
+          <div className="relative w-full bg-white" style={{ aspectRatio: "1 / 1" }}>
             <Image
               src={product.image}
               alt={product.name}
               fill
-              className="object-contain object-center p-3 transition-transform duration-300 group-hover:scale-105"
+              className="object-contain object-center p-1.5 transition-transform duration-300 group-hover:scale-105"
               draggable={false}
               unoptimized
             />
@@ -90,15 +90,15 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <Link
           href={`/product/${product.id}`}
-          className="block overflow-hidden px-2 text-center font-medium text-[#222] transition-colors hover:text-[#B68A35]"
+          className="block overflow-hidden px-2 text-center font-medium text-[#222] transition-colors hover:text-[#ED145B]"
           style={{
             display: "-webkit-box",
             WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
-            minHeight: 36,
-            lineHeight: "18px",
+            minHeight: 34,
+            lineHeight: "17px",
             fontSize: 12,
-            marginTop: 9,
+            marginTop: 6,
           }}
         >
           {product.name}
@@ -108,17 +108,17 @@ export default function ProductCard({ product }: { product: Product }) {
           <span className="text-gray-400 line-through" style={{ fontSize: 11 }}>
             ৳{formatPrice(product.originalPrice)}
           </span>
-          <span className="font-extrabold" style={{ color: SECONDARY, fontSize: 14 }}>
+          <span className="font-extrabold" style={{ color: SECONDARY, fontSize: 13 }}>
             ৳{formatPrice(product.discountedPrice)}
           </span>
         </div>
 
-        <div className="mt-auto" style={{ display: "grid", gridTemplateColumns: "1fr 32px", gap: 6, padding: "10px 9px 9px" }}>
+        <div className="mt-auto" style={{ display: "grid", gridTemplateColumns: "1fr 32px", gap: 5, padding: "8px 7px 7px" }}>
           <button
             onClick={handleOrderNow}
             disabled={product.inStock === false}
             className="whitespace-nowrap text-white font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-70"
-            style={{ borderRadius: 4, height: 30, background: product.inStock === false ? "#b8bec8" : PRIMARY, fontSize: 10, letterSpacing: "0.04em" }}
+            style={{ borderRadius: 3, height: 28, background: product.inStock === false ? "#b8bec8" : PRIMARY, fontSize: 10 }}
           >
             {product.inStock === false ? "STOCK OUT" : "ORDER NOW"}
           </button>
@@ -126,7 +126,7 @@ export default function ProductCard({ product }: { product: Product }) {
             onClick={handleAddToCart}
             disabled={product.inStock === false}
             className="flex items-center justify-center text-white transition-colors disabled:cursor-not-allowed disabled:opacity-70"
-            style={{ width: 32, height: 30, borderRadius: 4, background: product.inStock === false ? "#b8bec8" : added ? "#16a34a" : SECONDARY }}
+            style={{ width: 32, height: 28, borderRadius: 3, background: product.inStock === false ? "#b8bec8" : added ? "#16a34a" : SECONDARY }}
             title="Add to Cart"
           >
             {added ? (

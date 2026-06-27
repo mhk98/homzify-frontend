@@ -18,20 +18,21 @@ export default function ProductSection({
   if (products.length === 0) return null;
 
   return (
-    <section style={{ paddingTop: 10, paddingBottom: 14 }}>
+    <section style={{ paddingTop: 6, paddingBottom: 6 }}>
       <Container>
         <div
           className="flex items-center justify-between"
-          style={{ marginTop: 26, marginBottom: 16 }}
+          style={{ marginTop: 22, marginBottom: 12 }}
         >
           <h2
-            className="premium-section-heading"
+            className="uppercase text-gray-800"
+            style={{ fontSize: 14, fontWeight: 700 }}
           >
             {title}
           </h2>
           <Link
             href={`/?menu=${encodeURIComponent(menuParam ?? title)}`}
-            className="border text-[#B68A35] border-[#B68A35] hover:bg-[#001B54] hover:border-[#001B54] hover:text-white transition-colors font-semibold whitespace-nowrap"
+            className="border text-[#ED145B] border-[#ED145B] hover:bg-[#ED145B] hover:text-white transition-colors font-semibold whitespace-nowrap"
             style={{ borderRadius: 2, padding: "3px 10px", fontSize: 11 }}
           >
             View All
@@ -39,8 +40,8 @@ export default function ProductSection({
         </div>
 
         <HorizontalCarousel
-          itemWidthClass="w-[calc(50%-7px)] sm:w-[calc(33.333%-10px)] lg:w-[calc(16.666%-12px)]"
-          gap={14}
+          itemWidthClass="w-[calc(50%-5px)] sm:w-[calc(33.333%-7px)] lg:w-[calc(16.666%-9px)]"
+          gap={10}
           autoplay
           interval={6000}
           showArrows={false}

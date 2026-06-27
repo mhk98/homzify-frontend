@@ -2,16 +2,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { LOGO_URL, DELIVERY_PARTNER_URL } from "@/data/products";
 import { fetchPublicPages, type WebsitePage } from "@/services/pageService";
 import { fetchSiteSettings, type SiteSetting } from "@/services/settingService";
-
-const DEFAULT_CUSTOMER_LINKS = [
-  "Register",
-  "Login",
-  "Forgot Password?",
-  "Contact",
-];
 
 const SOCIAL_DEFS = [
   {
@@ -91,9 +83,7 @@ const SOCIAL_DEFS = [
     key: "twitterUrl" as const,
     name: "Twitter / X",
     color: "#111827",
-    icon: (
-      <span style={{ fontSize: 13, fontWeight: 900, lineHeight: 1 }}>X</span>
-    ),
+    icon: <span style={{ fontSize: 13, fontWeight: 900, lineHeight: 1 }}>X</span>,
   },
   {
     key: "linkedinUrl" as const,
@@ -109,9 +99,7 @@ const SOCIAL_DEFS = [
     key: "tiktokUrl" as const,
     name: "TikTok",
     color: "#000000",
-    icon: (
-      <span style={{ fontSize: 11, fontWeight: 900, lineHeight: 1 }}>TT</span>
-    ),
+    icon: <span style={{ fontSize: 11, fontWeight: 900, lineHeight: 1 }}>TT</span>,
   },
 ];
 
@@ -145,11 +133,11 @@ function FooterLink({
         href={href}
         style={{
           fontSize: 14,
-          color: "#4a4741",
+          color: "#444",
           lineHeight: "24px",
           display: "block",
         }}
-        className="hover:text-[#B68A35] transition-colors"
+        className="hover:text-red-600 transition-colors"
       >
         {children}
       </Link>
@@ -162,199 +150,175 @@ interface Props {
 }
 
 export default function Footer({ settings }: Props) {
-  const [resolvedSettings, setResolvedSettings] =
-    useState<Partial<SiteSetting> | null>(settings || null);
+  const [resolvedSettings, setResolvedSettings] = useState<Partial<SiteSetting> | null>(settings || null);
   const [pages, setPages] = useState<WebsitePage[]>([]);
   const s = settings || resolvedSettings || {};
-  const socialLinks = SOCIAL_DEFS.map((social) => ({
-    ...social,
-    url: s[social.key] || null,
-  })).filter((social) => social.url);
+  const socialLinks = SOCIAL_DEFS
+    .map((social) => ({ ...social, url: s[social.key] || null }))
+    .filter((social) => social.url);
 
-  const logoUrl = s.logoUrl || LOGO_URL;
-  const deliveryPartnerUrl = s.deliveryPartnerUrl || DELIVERY_PARTNER_URL;
-  const address =
-    s.address || "Dinajpur City College, Nimnager, Balubari, Dinajpur";
-  const phone = s.phone || s.phoneNumber || s.hotlineNumber || "01769950986";
-  const email = s.email || s.hotMail || "info@homzify.com";
-  const copyright =
-    s.copyrightText ||
-    "Copyright © 2026 Homzify. All rights reserved. Developed By DeenSoft";
+  const logoUrl = s.logoUrl || null;
+  const deliveryPartnerUrl = s.deliveryPartnerUrl || null;
+  const address = s.address || null;
+  const phone = s.phone || null;
+  const email = s.email || null;
+  const copyright = s.copyrightText || null;
+  const hasContactInfo = Boolean(logoUrl || address || phone || email);
 
   // Split copyright into text + brand link if it contains "Developed By"
-  const devIdx = copyright.indexOf("Developed By");
+  const devIdx = copyright?.indexOf("Developed By") ?? -1;
   const copyrightMain =
     devIdx >= 0
-      ? copyright.slice(0, devIdx + "Developed By".length)
-      : copyright;
+      ? copyright!.slice(0, devIdx + "Developed By".length)
+      : copyright || "";
   const copyrightBrand =
-    devIdx >= 0 ? copyright.slice(devIdx + "Developed By".length).trim() : "";
+    devIdx >= 0 ? copyright!.slice(devIdx + "Developed By".length).trim() : "";
 
   useEffect(() => {
     if (settings) {
       setResolvedSettings(settings);
       return;
     }
-    fetchSiteSettings()
-      .then(setResolvedSettings)
-      .catch(() => setResolvedSettings({}));
+    fetchSiteSettings().then(setResolvedSettings).catch(() => setResolvedSettings({}));
   }, [settings]);
 
   useEffect(() => {
-    fetchPublicPages()
-      .then(setPages)
-      .catch(() => setPages([]));
+    fetchPublicPages().then(setPages).catch(() => setPages([]));
   }, []);
 
   return (
-    <footer
-      className="bg-white"
-      style={{ marginTop: 58, borderTop: "1px solid rgba(182,138,53,0.18)" }}
-    >
+    <footer className="bg-white mt-4">
       <div
         style={{
           width: "90%",
           margin: "0 auto",
-          paddingTop: 70,
-          paddingBottom: 58,
+          paddingTop: 50,
+          paddingBottom: 50,
         }}
       >
         <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
           style={{ gap: 40 }}
         >
-          {/* Col 1 — Logo + Address */}
-          <div>
-            <Link href="/" style={{ display: "block", marginBottom: 16 }}>
-              <div className="relative" style={{ width: 170, height: 74 }}>
-                <Image
-                  src={logoUrl}
-                  alt="Logo"
-                  fill
-                  className="object-contain object-left"
-                  unoptimized
-                />
+          {hasContactInfo && (
+            <div>
+              {logoUrl && (
+                <Link href="/" style={{ display: "block", marginBottom: 16 }}>
+                  <div className="relative" style={{ width: 150, height: 65 }}>
+                    <Image
+                      src={logoUrl}
+                      alt="Logo"
+                      fill
+                      className="object-contain object-left"
+                      unoptimized
+                    />
+                  </div>
+                </Link>
+              )}
+              <div
+                style={{
+                  fontSize: 14,
+                  color: "#444",
+                  lineHeight: "24px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                }}
+              >
+                {address && <span>{address}</span>}
+                {phone && <span>{phone}</span>}
+                {email && <span>{email}</span>}
               </div>
-            </Link>
-            <div
-              style={{
-                fontSize: 14,
-                color: "#4a4741",
-                lineHeight: "24px",
-                display: "flex",
-                flexDirection: "column",
-                gap: 8,
-              }}
-            >
-              {address && <span>{address}</span>}
-              {phone && (
-                <a
-                  href={`tel:${phone}`}
-                  className="hover:text-[#B68A35] transition-colors"
-                >
-                  {phone}
-                </a>
-              )}
-              {email && (
-                <a
-                  href={`mailto:${email}`}
-                  className="hover:text-[#B68A35] transition-colors"
-                >
-                  {email}
-                </a>
-              )}
             </div>
-          </div>
+          )}
 
           {/* Col 2 — Useful Links */}
+          {pages.length > 0 && (
           <div>
             <ColHeading>USEFUL LINK</ColHeading>
             <ul style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {pages.length > 0 ? (
-                pages.map((page) => (
+              {pages.map((page) => (
                   <FooterLink key={page.Id} href={`/page/${page.slug}`}>
                     {page.title || page.name}
                   </FooterLink>
-                ))
-              ) : (
-                <FooterLink href="/contact">Contact</FooterLink>
-              )}
+                ))}
             </ul>
           </div>
-
-          {/* Col 3 — Customer Links */}
-          <div>
-            <ColHeading>CUSTOMER LINK</ColHeading>
-            <ul style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {DEFAULT_CUSTOMER_LINKS.map((l) => (
-                <FooterLink key={l} href={l === "Contact" ? "/contact" : "#"}>
-                  {l}
-                </FooterLink>
-              ))}
-            </ul>
-          </div>
+          )}
 
           {/* Col 4 — Follow Us + Delivery Partner */}
+          {(socialLinks.length > 0 || deliveryPartnerUrl) && (
           <div>
-            <ColHeading>FOLLOW US</ColHeading>
-            <div
-              style={{
-                display: "flex",
-                gap: 6,
-                flexWrap: "wrap",
-                marginBottom: 24,
-              }}
-            >
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.url!}
-                  target="_blank"
-                  rel="noreferrer"
-                  title={social.name}
-                  className="flex items-center justify-center text-white hover:opacity-80 transition-opacity"
+            {socialLinks.length > 0 && (
+              <>
+                <ColHeading>FOLLOW US</ColHeading>
+                <div
                   style={{
-                    width: 34,
-                    height: 34,
-                    borderRadius: 5,
-                    backgroundColor: social.color,
-                    flexShrink: 0,
+                    display: "flex",
+                    gap: 6,
+                    flexWrap: "wrap",
+                    marginBottom: 24,
                   }}
                 >
-                  {social.icon}
-                </a>
-              ))}
-            </div>
+                  {socialLinks.map((social) => (
+                  <a
+                    key={social.name}
+                    href={social.url!}
+                    target="_blank"
+                    rel="noreferrer"
+                    title={social.name}
+                    className="flex items-center justify-center text-white hover:opacity-80 transition-opacity"
+                    style={{
+                      width: 34,
+                      height: 34,
+                      borderRadius: 5,
+                      backgroundColor: social.color,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {social.icon}
+                  </a>
+                  ))}
+                </div>
+              </>
+            )}
 
-            <ColHeading>DELIVERY PARTNER</ColHeading>
-            <div className="relative" style={{ width: 200, height: 55 }}>
-              <Image
-                src={deliveryPartnerUrl}
-                alt="Delivery Partner"
-                fill
-                className="object-contain object-left"
-                unoptimized
-              />
-            </div>
+            {deliveryPartnerUrl && (
+              <>
+                <ColHeading>DELIVERY PARTNER</ColHeading>
+                <div className="relative" style={{ width: 200, height: 55 }}>
+                  <Image
+                    src={deliveryPartnerUrl}
+                    alt="Delivery Partner"
+                    fill
+                    className="object-contain object-left"
+                    unoptimized
+                  />
+                </div>
+              </>
+            )}
           </div>
+          )}
         </div>
       </div>
 
       {/* Copyright */}
-      <div className="bg-[#0B0B0A] py-3.5 text-center">
+      {copyright && (
+      <div className="bg-black py-3.5 text-center">
         <p style={{ fontSize: 13, color: "#aaa" }}>
           {copyrightMain}{" "}
           {copyrightBrand && (
             <a
               href="#"
               className="hover:underline"
-              style={{ color: "#B68A35" }}
+              style={{ color: "#ED145B" }}
             >
               {copyrightBrand}
             </a>
           )}
         </p>
       </div>
+      )}
     </footer>
   );
 }

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "env -u DEBUG -u ELECTRON_RUN_AS_NODE -u ELECTRON_NO_ATTACH_CONSOLE -u MallocNanoZone -u MallocStackLogging -u MallocStackLoggingNoCompact next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

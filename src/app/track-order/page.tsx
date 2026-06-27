@@ -14,9 +14,8 @@ import {
   type OrderStatusOption,
 } from "@/services/orderStatusService";
 
-const PRIMARY = "#B68A35";
-const SECONDARY = "#001B54";
-const TRACKING_STOPPED_STATUS_KEYS = ["cancelled", "returned", "incomplete", "on_hold"];
+const PRIMARY = "#ED145B";
+const SECONDARY = "#6620EE";
 
 interface TrackedOrderItem {
   name: string; qty: number; price: number;
@@ -53,9 +52,6 @@ function getOrderItems(items: TrackedOrder["items"]): TrackedOrderItem[] {
   if (Array.isArray(items)) return items;
   try { const p = JSON.parse(items as string); return Array.isArray(p) ? p : []; } catch { return []; }
 }
-function isDeliveredOrder(order: TrackedOrder) {
-  return toOrderStatusKey(order.status) === "delivered";
-}
 function fmt(v: number | string | undefined) { return Number(v || 0).toLocaleString("en-US"); }
 function fmtDate(v: string) {
   return new Date(v).toLocaleDateString("bn-BD", { day: "numeric", month: "long", year: "numeric" });
@@ -77,13 +73,13 @@ function StatusBadge({ status, statuses }: { status: string; statuses: OrderStat
 function StatusTimeline({ status, statuses }: { status: string; statuses: OrderStatusOption[] }) {
   const meta = getStatusMeta(status, statuses);
   const currentKey = toOrderStatusKey(status);
-  const isStopped = TRACKING_STOPPED_STATUS_KEYS.includes(currentKey);
+  const isStopped = ["cancelled", "returned", "incomplete", "on_hold"].includes(currentKey);
   const visibleSteps = isStopped
     ? statuses.filter((step) => ["pending", currentKey].includes(step.key))
-    : statuses.filter((step) => !TRACKING_STOPPED_STATUS_KEYS.includes(step.key));
+    : statuses.filter((step) => !["cancelled", "returned", "incomplete", "on_hold"].includes(step.key));
   return (
     <div className="status-timeline-grid">
-      {visibleSteps.map((step) => {
+      {visibleSteps.map((step, index) => {
         const stepIndex = statuses.findIndex((item) => item.key === step.key);
         const active = isStopped ? true : stepIndex <= meta.index;
         return (
@@ -102,7 +98,6 @@ function StatusTimeline({ status, statuses }: { status: string; statuses: OrderS
 export default function TrackOrderPage() {
   const [trackingValue, setTrackingValue] = useState("");
   const [orders,  setOrders]  = useState<TrackedOrder[] | null>(null);
-  const [lastSearchType, setLastSearchType] = useState<"phone" | "invoice" | null>(null);
   const [orderStatuses, setOrderStatuses] = useState<OrderStatusOption[]>(() => normalizeOrderStatuses());
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState("");
@@ -118,13 +113,12 @@ export default function TrackOrderPage() {
     const isPhone   = /^01\d{9}$/.test(normalized);
     const isInvoice = /^WZ-[A-Z0-9-]+$/.test(normalized);
     if (!isPhone && !isInvoice) { setError("সঠিক ফোন নম্বর অথবা ইনভয়েস আইডি দিন"); return; }
-    setError(""); setLoading(true); setOrders(null); setLastSearchType(isPhone ? "phone" : "invoice");
+    setError(""); setLoading(true); setOrders(null);
     try {
       const res = await apiFetch<ApiResponse<TrackedOrder[]>>("/orders/track", {
         params: isInvoice ? { invoiceId: normalized } : { phone: normalized },
       });
-      const trackedOrders = res.data || [];
-      setOrders(isPhone ? trackedOrders.filter((order) => !isDeliveredOrder(order)) : trackedOrders);
+      setOrders(res.data || []);
     } catch {
       setError("অর্ডারের তথ্য আনতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
     } finally {
@@ -204,14 +198,8 @@ export default function TrackOrderPage() {
                   <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5M8.5 8.5l5 5M13.5 8.5l-5 5" />
                 </svg>
               </div>
-              <h2 style={{ fontSize: 18, fontWeight: 800, color: "#111827" }}>
-                {lastSearchType === "phone" ? "কোনো চলমান অর্ডার পাওয়া যায়নি" : "কোনো অর্ডার পাওয়া যায়নি"}
-              </h2>
-              <p style={{ marginTop: 8, fontSize: 14, color: "#6b7280" }}>
-                {lastSearchType === "phone"
-                  ? "এই ফোন নম্বরে আপাতত কোনো চলমান অর্ডার নেই।"
-                  : "ফোন নম্বর বা ইনভয়েস আইডি মিলিয়ে আবার চেষ্টা করুন।"}
-              </p>
+              <h2 style={{ fontSize: 18, fontWeight: 800, color: "#111827" }}>কোনো অর্ডার পাওয়া যায়নি</h2>
+              <p style={{ marginTop: 8, fontSize: 14, color: "#6b7280" }}>ফোন নম্বর বা ইনভয়েস আইডি মিলিয়ে আবার চেষ্টা করুন।</p>
             </div>
           )}
 

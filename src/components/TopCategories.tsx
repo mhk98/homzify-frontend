@@ -14,9 +14,9 @@ export default function TopCategories({ items }: Props) {
   if (categories.length === 0) return null;
 
   return (
-    <section style={{ padding: "18px 0" }}>
+    <section style={{ padding: "15px 0" }}>
       <Container>
-        <h2 className="premium-section-heading" style={{ marginBottom: 16 }}>
+        <h2 style={{ fontSize: 16, fontWeight: 600, textTransform: "uppercase", color: "#222", marginBottom: 15 }}>
           TOP CATEGORIES
         </h2>
 
@@ -32,7 +32,7 @@ export default function TopCategories({ items }: Props) {
             <Link key={cat.Id} href={`/?menu=${encodeURIComponent(cat.label)}`} className="group flex flex-col items-center">
               <div
                 className="cat-img-box w-full bg-white overflow-hidden hover:shadow-md transition-shadow"
-                style={{ borderRadius: 6, border: "1px solid rgba(11,11,10,0.08)", boxShadow: "0 1px 2px rgba(11,11,10,0.04)" }}
+                style={{ borderRadius: 5, border: "1px solid #e5e7eb" }}
               >
                 <div className="relative w-full h-full">
                   <Image
@@ -46,7 +46,7 @@ export default function TopCategories({ items }: Props) {
                 </div>
               </div>
               <span
-                className="group-hover:text-[#B68A35] transition-colors text-center mt-1 leading-tight line-clamp-2"
+                className="group-hover:text-red-600 transition-colors text-center mt-1 leading-tight line-clamp-2"
                 style={{ fontSize: 12, textTransform: "capitalize", color: "#444" }}
               >
                 {cat.label}
