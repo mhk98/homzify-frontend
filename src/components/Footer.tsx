@@ -176,10 +176,10 @@ export default function Footer({ settings }: Props) {
   const address =
     s.address || "Dinajpur City College, Nimnager, Balubari, Dinajpur";
   const phone = s.phone || s.phoneNumber || s.hotlineNumber || "01769950986";
-  const email = s.email || s.hotMail || "info@holydeen.com";
+  const email = s.email || s.hotMail || "info@homzify.com";
   const copyright =
     s.copyrightText ||
-    "Copyright © 2026 Holy Deen. All rights reserved. Developed By DeenSoft";
+    "Copyright © 2026 Homzify. All rights reserved. Developed By DeenSoft";
 
   // Split copyright into text + brand link if it contains "Developed By"
   const devIdx = copyright.indexOf("Developed By");
@@ -207,7 +207,10 @@ export default function Footer({ settings }: Props) {
   }, []);
 
   return (
-    <footer className="bg-white" style={{ marginTop: 58, borderTop: "1px solid rgba(182,138,53,0.18)" }}>
+    <footer
+      className="bg-white"
+      style={{ marginTop: 58, borderTop: "1px solid rgba(182,138,53,0.18)" }}
+    >
       <div
         style={{
           width: "90%",

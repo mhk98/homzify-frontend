@@ -633,12 +633,16 @@ body {
 
 .premium-product-media {
   background:
-    radial-gradient(circle at 50% 42%, rgba(182, 138, 53, 0.12), transparent 38%),
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(182, 138, 53, 0.12),
+      transparent 38%
+    ),
     linear-gradient(180deg, #fff 0%, #faf8f1 100%);
 }
 
 .premium-product-media::before {
-  content: "HOLY DEEN";
+  content: "Homzify";
   position: absolute;
   inset: auto 12px 12px;
   color: rgba(11, 11, 10, 0.07);

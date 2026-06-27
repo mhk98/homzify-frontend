@@ -14,7 +14,7 @@ export default function PopupBanner({ banners = [] }: Props) {
 
   useEffect(() => {
     if (!banner) return;
-    const seenKey = `holydeen_popup_banner_${banner.Id}`;
+    const seenKey = `homzify_popup_banner_${banner.Id}`;
     if (sessionStorage.getItem(seenKey)) return;
     const timer = window.setTimeout(() => setOpen(true), 800);
     return () => window.clearTimeout(timer);
@@ -23,7 +23,7 @@ export default function PopupBanner({ banners = [] }: Props) {
   if (!banner || !open) return null;
 
   const close = () => {
-    sessionStorage.setItem(`holydeen_popup_banner_${banner.Id}`, "1");
+    sessionStorage.setItem(`homzify_popup_banner_${banner.Id}`, "1");
     setOpen(false);
   };
 
@@ -51,7 +51,12 @@ export default function PopupBanner({ banners = [] }: Props) {
           ×
         </button>
         {banner.linkUrl ? (
-          <a href={banner.linkUrl} target="_blank" rel="noreferrer" onClick={close}>
+          <a
+            href={banner.linkUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={close}
+          >
             {image}
           </a>
         ) : (

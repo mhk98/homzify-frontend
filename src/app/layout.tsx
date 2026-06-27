@@ -14,7 +14,7 @@ const lato = Lato({
 });
 
 const baseMetadata: Metadata = {
-  title: "Holy Deen - Holy Deen is the best level ecommerce in Bangladesh",
+  title: "Homzify - Homzify is the best level ecommerce in Bangladesh",
   description: "Best level ecommerce in Bangladesh",
   icons: {
     icon: [{ url: "/icon.png", type: "image/png" }],
