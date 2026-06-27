@@ -1,10 +1,10 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.homzify.net";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 // Server-side Node.js fetch needs absolute URL; browser uses relative (goes through Next.js rewrites)
 export const BASE =
   typeof window === "undefined" ? `${API_URL}/api/v1` : "/api/v1";
 
-export const IMAGES = `${API_URL}/images`;
+export const IMAGES = "/images";
 
 interface FetchOptions extends RequestInit {
   params?: Record<string, string | number | undefined>;

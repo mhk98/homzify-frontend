@@ -46,7 +46,7 @@ export default function TopCategories({ items }: Props) {
                 </div>
               </div>
               <span
-                className="group-hover:text-red-600 transition-colors text-center mt-1 leading-tight line-clamp-2"
+                className="group-hover:text-[#10B8C4] transition-colors text-center mt-1 leading-tight line-clamp-2"
                 style={{ fontSize: 12, textTransform: "capitalize", color: "#444" }}
               >
                 {cat.label}

@@ -189,7 +189,7 @@ export default function ContactPage() {
         value: phone,
         href: `tel:${phone}`,
         bg: "#eff6ff",
-        color: "#6620EE",
+        color: "#10B8C4",
         icon: "phone" as const,
       },
       hotline && {
@@ -207,7 +207,7 @@ export default function ContactPage() {
         value: email,
         href: `mailto:${email}`,
         bg: "#fef2f2",
-        color: "#ED145B",
+        color: "#073763",
         icon: "mail" as const,
       },
       hotMail && {
@@ -341,7 +341,7 @@ export default function ContactPage() {
                   minHeight: 42,
                   padding: "0 18px",
                   borderRadius: 8,
-                  background: "#6620EE",
+                  background: "#10B8C4",
                   color: "#fff",
                   fontSize: 14,
                   fontWeight: 700,

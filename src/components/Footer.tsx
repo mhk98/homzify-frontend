@@ -137,7 +137,7 @@ function FooterLink({
           lineHeight: "24px",
           display: "block",
         }}
-        className="hover:text-red-600 transition-colors"
+        className="hover:text-[#10B8C4] transition-colors"
       >
         {children}
       </Link>
@@ -311,7 +311,7 @@ export default function Footer({ settings }: Props) {
             <a
               href="#"
               className="hover:underline"
-              style={{ color: "#ED145B" }}
+              style={{ color: "#073763" }}
             >
               {copyrightBrand}
             </a>

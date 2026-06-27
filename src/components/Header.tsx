@@ -11,8 +11,8 @@ import { useCart } from "@/context/CartContext";
 import { useCustomer } from "@/context/CustomerContext";
 import { trackPixelEvent } from "@/lib/pixel";
 
-const PRIMARY   = "#ED145B";   // hot-pink — border, icons
-const SECONDARY = "#6620EE";   // purple  — nav bg, cart badge, dropdown hover
+const PRIMARY   = "#073763";   // logo navy
+const SECONDARY = "#10B8C4";   // logo teal
 
 interface HeaderProps {
   logoUrl?: string | null;
@@ -164,7 +164,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
             <div ref={cartRef} className="relative" style={{ flexShrink: 0 }}>
               <button
                 onClick={() => setCartOpen((o) => !o)}
-                className="flex items-center text-gray-600 hover:text-[#ED145B] transition-colors"
+                className="flex items-center text-gray-600 hover:text-[#073763] transition-colors"
                 style={{ background: "none", border: "none", cursor: "pointer", padding: 4, position: "relative" }}
               >
                 <div className="relative">
@@ -340,7 +340,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
 
           {/* Right icons */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 20 }}>
-            <Link href="/track-order" className="hidden md:flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#ED145B] transition-colors">
+            <Link href="/track-order" className="hidden md:flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#073763] transition-colors">
               <svg width={24} height={24} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
                 <rect x="1" y="3" width="15" height="13" rx="1" /><path d="M16 8h4l3 3v5h-7V8z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
               </svg>
@@ -348,12 +348,12 @@ function HeaderInner({ logoUrl }: HeaderProps) {
             </Link>
 
             {isLoggedIn ? (
-              <button onClick={customerLogout} className="hidden sm:flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#ED145B] transition-colors" style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+              <button onClick={customerLogout} className="hidden sm:flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#073763] transition-colors" style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
                 <svg width={24} height={24} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg>
                 <span style={{ fontSize: 11 }}>Logout</span>
               </button>
             ) : (
-              <Link href="/login" className="hidden sm:flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#ED145B] transition-colors">
+              <Link href="/login" className="hidden sm:flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#073763] transition-colors">
                 <svg width={24} height={24} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                 <span style={{ fontSize: 11 }}>Login</span>
               </Link>
@@ -361,7 +361,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
 
             {/* Cart with hover dropdown */}
             <div ref={cartRef} className="relative" onMouseEnter={() => setCartOpen(true)} onMouseLeave={() => setCartOpen(false)}>
-              <button className="flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#ED145B] transition-colors">
+              <button className="flex flex-col items-center gap-0.5 text-gray-600 hover:text-[#073763] transition-colors">
                 <div className="relative">
                   <svg width={26} height={26} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
                     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
@@ -413,7 +413,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
       </div>
 
       {/* ── Navigation bar ── */}
-      <nav style={{ backgroundColor: SECONDARY }} ref={navRef}>
+      <nav style={{ backgroundColor: PRIMARY }} ref={navRef}>
         <div style={{ width: "90%", margin: "0 auto" }}>
 
           {/* Desktop nav — justify-evenly so equal gap between AND at edges */}
@@ -436,7 +436,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
                       fontSize: 13,
                       padding: "18px 6px",
                       display: "flex",
-                      borderBottom: isActive ? `3px solid ${PRIMARY}` : "3px solid transparent",
+                      borderBottom: isActive ? `3px solid ${SECONDARY}` : "3px solid transparent",
                     }}
                   >
                     {item.label}
@@ -451,7 +451,7 @@ function HeaderInner({ logoUrl }: HeaderProps) {
                   {subItems.length > 0 && openDrop === item.label && (
                     <div
                       className="absolute top-full left-0 bg-white shadow-xl z-50 animate-fadeIn"
-                      style={{ minWidth: 200, border: "1px solid #eee", borderTop: `3px solid ${PRIMARY}` }}
+                      style={{ minWidth: 200, border: "1px solid #eee", borderTop: `3px solid ${SECONDARY}` }}
                     >
                       {subItems.map((sub) => {
                         const isSubActive =

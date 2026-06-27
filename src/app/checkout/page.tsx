@@ -43,7 +43,7 @@ function CheckoutContent() {
   const discount       = appliedCoupon?.discount || 0;
   const grandTotal     = Math.max(0, totalPrice + deliveryCharge - discount);
   const paymentMethods = [
-    { id: "cod" as const, label: "Cash on Delivery", number: null, bg: "#6620EE" },
+    { id: "cod" as const, label: "Cash on Delivery", number: null, bg: "#10B8C4" },
     { id: "bkash" as const, label: "bKash", number: settings?.bkashNumber, bg: "#E2136E" },
     { id: "nagad" as const, label: "Nagad", number: settings?.nagadNumber, bg: "#F7941D" },
     { id: "rocket" as const, label: "Rocket", number: settings?.rocketNumber, bg: "#7A1FA2" },
@@ -160,7 +160,7 @@ function CheckoutContent() {
             )}
 
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <Link href="/track-order" style={{ display: "block", background: "#6620EE", color: "#fff", padding: "13px 0", borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+              <Link href="/track-order" style={{ display: "block", background: "#10B8C4", color: "#fff", padding: "13px 0", borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
                 Order Track করুন
               </Link>
               <Link href="/" style={{ display: "block", background: "#f3f4f6", color: "#374151", padding: "13px 0", borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
@@ -200,8 +200,8 @@ function CheckoutContent() {
             {/* ── Left: Form ── */}
             <div style={{ background: "#fff", borderRadius: 10, overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
 
-              {/* Purple header */}
-              <div style={{ background: "#6620EE", padding: "18px 28px" }}>
+              {/* Brand header */}
+              <div style={{ background: "#10B8C4", padding: "18px 28px" }}>
                 <p style={{ color: "#fff", fontSize: 15, fontWeight: 600, margin: 0 }}>
                   বিস্তারিত তথ্য পূরণ করুন এবং &apos;অর্ডার কনফার্ম করুন&apos; বাটনে ক্লিক করুন।
                 </p>
@@ -300,7 +300,7 @@ function CheckoutContent() {
                     </span>
                   </div>
                   {district && (
-                    <p style={{ margin: "6px 0 0", fontSize: 13, color: "#6620EE", fontWeight: 500 }}>
+                    <p style={{ margin: "6px 0 0", fontSize: 13, color: "#10B8C4", fontWeight: 500 }}>
                       {allItemsFreeShipping
                         ? "এই অর্ডারে ফ্রি ডেলিভারি প্রযোজ্য"
                         : `ডেলিভারি চার্জ: ৳${fmt(deliveryCharge)}`}
@@ -366,7 +366,7 @@ function CheckoutContent() {
                   onClick={handleConfirm}
                   disabled={loading}
                   style={{
-                    background: loading ? "#aaa" : "#ED145B", color: "#fff", border: "none", borderRadius: 8,
+                    background: loading ? "#aaa" : "#073763", color: "#fff", border: "none", borderRadius: 8,
                     padding: "16px 0", fontSize: 16, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer",
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 10, opacity: loading ? 0.8 : 1,
                   }}
@@ -496,7 +496,7 @@ function CheckoutContent() {
                     onClick={handleApplyCoupon}
                     disabled={couponLoading}
                     style={{
-                      background: couponLoading ? "#9ca3af" : "#6620EE", color: "#fff", border: "none", borderRadius: 8,
+                      background: couponLoading ? "#9ca3af" : "#10B8C4", color: "#fff", border: "none", borderRadius: 8,
                       padding: "0 22px", fontSize: 14, fontWeight: 700, cursor: couponLoading ? "not-allowed" : "pointer",
                     }}
                   >

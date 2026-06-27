@@ -8,8 +8,8 @@ import { useCart } from "@/context/CartContext";
 import { useCustomer } from "@/context/CustomerContext";
 import { trackPixelEvent } from "@/lib/pixel";
 
-const PRIMARY   = "#ED145B";
-const SECONDARY = "#6620EE";
+const PRIMARY   = "#073763";
+const SECONDARY = "#10B8C4";
 const formatPrice = (value: number) => value.toLocaleString("en-US");
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -90,7 +90,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <Link
           href={`/product/${product.id}`}
-          className="block overflow-hidden px-2 text-center font-medium text-[#222] transition-colors hover:text-[#ED145B]"
+          className="block overflow-hidden px-2 text-center font-medium text-[#222] transition-colors hover:text-[#073763]"
           style={{
             display: "-webkit-box",
             WebkitLineClamp: 2,
