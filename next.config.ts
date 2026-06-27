@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.homzify.net";
 
 const nextConfig: NextConfig = {
   async rewrites() {
@@ -18,16 +18,6 @@ const nextConfig: NextConfig = {
 
   images: {
     remotePatterns: [
-      { protocol: "https", hostname: "placehold.co" },
-      {
-        protocol: "https",
-        hostname: "sellpixer.websolutionit.com",
-        pathname: "/public/**",
-      },
-      { protocol: "https", hostname: "cdn.dummyjson.com" },
-      { protocol: "https", hostname: "images.unsplash.com" },
-      { protocol: "https", hostname: "test.eaconsultancy.org" },
-
       {
         protocol: "https",
         hostname: "api.homzify.net",
