@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "placehold.co" },
@@ -26,14 +27,19 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "cdn.dummyjson.com" },
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "test.eaconsultancy.org" },
-      // Backend image server (localhost dev + production)
+
+      {
+        protocol: "https",
+        hostname: "api.homzify.net",
+        pathname: "/images/**",
+      },
+
       {
         protocol: "http",
         hostname: "localhost",
         port: "5000",
         pathname: "/images/**",
       },
-      { protocol: "https", hostname: "**", pathname: "/images/**" },
     ],
   },
 };
