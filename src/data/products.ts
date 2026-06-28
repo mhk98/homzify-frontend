@@ -14,10 +14,21 @@ export interface Product {
   hasVariants?: boolean;
   sizes?: string[];
   colors?: string[];
+  variants?: ProductVariant[];
   inStock?: boolean;
   category?: string | null;
   subCategory?: string | null;
   childCategory?: string | null;
+}
+
+export interface ProductVariant {
+  colorId?: number | null;
+  colorName?: string | null;
+  attribute?: string | null;
+  oldPrice?: number | string | null;
+  newPrice?: number | string | null;
+  stock?: number | string | null;
+  availability?: string | null;
 }
 
 export interface NavItem {

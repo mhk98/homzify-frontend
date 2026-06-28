@@ -324,7 +324,7 @@ export default function ProductDetailClient({
   const { addToCart } = useCart();
   const { customer } = useCustomer();
 
-  const allImages = [product.image, ...(product.gallery || [])].filter(Boolean);
+  const allImages = [...new Set([product.image, ...(product.gallery || [])].filter(Boolean))];
 
   const [activeIdx, setActiveIdx] = useState(0);
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0] ?? "");
@@ -332,6 +332,30 @@ export default function ProductDetailClient({
   const [qty, setQty] = useState(1);
   const [addedMsg, setAddedMsg] = useState(false);
   const [reviews, setReviews] = useState<ProductReview[]>([]);
+
+  const selectedVariant = useMemo(() => {
+    const variants = product.variants || [];
+    return variants.find((variant) => {
+      const variantColor = variant.colorName || "";
+      const variantSize = variant.attribute || "";
+      const colorOk = !selectedColor || !variantColor || variantColor === selectedColor;
+      const sizeOk = !selectedSize || !variantSize || variantSize === selectedSize;
+      return colorOk && sizeOk;
+    }) || variants[0] || null;
+  }, [product.variants, selectedColor, selectedSize]);
+
+  const selectedOldPrice = Number(selectedVariant?.oldPrice || product.originalPrice);
+  const selectedNewPrice = Number(selectedVariant?.newPrice || product.discountedPrice);
+  const selectedStock = Number(selectedVariant?.stock || 0);
+  const selectedInStock = selectedVariant
+    ? selectedVariant.availability !== "out of stock" && selectedStock > 0
+    : product.inStock !== false;
+  const cartProduct = {
+    ...product,
+    originalPrice: selectedOldPrice,
+    discountedPrice: selectedNewPrice,
+    inStock: selectedInStock,
+  };
 
   useEffect(() => {
     let active = true;
@@ -355,7 +379,7 @@ export default function ProductDetailClient({
 
   const handleAddToCart = () => {
     addToCart(
-      product,
+      cartProduct,
       qty,
       selectedSize || undefined,
       selectedColor || undefined,
@@ -366,7 +390,7 @@ export default function ProductDetailClient({
         content_ids: [product.id],
         content_name: product.name,
         content_type: "product",
-        value: product.discountedPrice * qty,
+        value: selectedNewPrice * qty,
         currency: "BDT",
         num_items: qty,
       },
@@ -383,14 +407,14 @@ export default function ProductDetailClient({
         content_ids: [product.id],
         content_name: product.name,
         content_type: "product",
-        value: product.discountedPrice * qty,
+        value: selectedNewPrice * qty,
         currency: "BDT",
         num_items: qty,
       },
       pixelUserData,
     );
     addToCart(
-      product,
+      cartProduct,
       qty,
       selectedSize || undefined,
       selectedColor || undefined,
@@ -498,14 +522,14 @@ export default function ProductDetailClient({
           style={{ marginBottom: "1rem" }}
           className="mb-3 flex items-baseline gap-1.5"
         >
-          {product.discount > 0 && (
+          {selectedOldPrice > selectedNewPrice && (
             <span className="text-xl font-bold text-gray-400 line-through">
-              ৳ {fmt(product.originalPrice)}
+              ৳ {fmt(selectedOldPrice)}
             </span>
           )}
 
           <span className="text-[26px] font-extrabold text-black">
-            ৳ {fmt(product.discountedPrice)}
+            ৳ {fmt(selectedNewPrice)}
           </span>
         </div>
 

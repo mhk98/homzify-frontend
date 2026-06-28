@@ -37,15 +37,29 @@ function toBoolean(value: unknown): boolean {
   return false;
 }
 
+function uniqueImages(images: string[]): string[] {
+  const seen = new Set<string>();
+  return images.filter((image) => {
+    if (!image || seen.has(image)) return false;
+    seen.add(image);
+    return true;
+  });
+}
+
 function mapToProduct(item: ApiProduct): Product {
   const sizes: string[] = [];
   const colors: string[] = [];
+  const variants = Array.isArray(item.variants) ? item.variants : [];
   if (item.variants && Array.isArray(item.variants)) {
     item.variants.forEach((v) => {
+      if (v.attribute) sizes.push(v.attribute);
+      if (v.colorName) colors.push(v.colorName);
       if (v.size) sizes.push(...(Array.isArray(v.size) ? v.size : [v.size]));
       if (v.color) colors.push(...(Array.isArray(v.color) ? v.color : [v.color]));
     });
   }
+  const uniqueSizes = [...new Set(sizes.filter(Boolean))];
+  const uniqueColors = [...new Set(colors.filter(Boolean))];
   const originalPrice = Number(item.original_price ?? item.sale_price ?? 0);
   const discountedPrice = Number(item.sale_price ?? item.original_price ?? 0);
   const apiDiscount = Number(item.discount ?? 0);
@@ -63,13 +77,14 @@ function mapToProduct(item: ApiProduct): Product {
     discountedPrice,
     discount,
     image: toImgUrl(item.file),
-    gallery: (item.gallery || []).map((f) => toImgUrl(f)),
+    gallery: uniqueImages((item.gallery || []).map((f) => toImgUrl(f))),
     features: item.features || [],
     sku: item.sku ?? null,
     freeShipping: toBoolean(item.freeShipping),
-    hasVariants: sizes.length > 0 || colors.length > 0,
-    sizes: sizes.length > 0 ? sizes : undefined,
-    colors: colors.length > 0 ? colors : undefined,
+    hasVariants: uniqueSizes.length > 0 || uniqueColors.length > 0,
+    sizes: uniqueSizes.length > 0 ? uniqueSizes : undefined,
+    colors: uniqueColors.length > 0 ? uniqueColors : undefined,
+    variants,
     inStock: item.inStock,
     category: item.category,
     subCategory: item.subCategory,

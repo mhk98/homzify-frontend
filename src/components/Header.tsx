@@ -69,10 +69,9 @@ function HeaderInner({ logoUrl }: HeaderProps) {
     try {
       const { products } = await fetchStorefrontProducts({ limit: 500 });
       setAllProducts(products);
+      setProductsLoaded(true);
     } catch (e) {
       console.error("Search: failed to load products", e);
-    } finally {
-      setProductsLoaded(true);
     }
   }, [productsLoaded]);
 

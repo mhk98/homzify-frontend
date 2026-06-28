@@ -33,12 +33,140 @@ export interface SiteSetting {
   linkedinUrl: string | null;
   tiktokUrl: string | null;
   deliveryPartnerUrl: string | null;
+  websiteFooter: FooterSetting;
 }
 
 function toUrl(file: string | null | undefined): string | null {
   if (!file) return null;
   if (file.startsWith("http") || file.startsWith("data:") || file.startsWith("/")) return file;
   return `${IMAGES}/${file}`;
+}
+
+export interface FooterLinkSetting {
+  label: string;
+  url: string;
+}
+
+export interface FooterSetting {
+  status?: boolean;
+  logoUrl?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  customerLinksTitle?: string | null;
+  customerLinks?: FooterLinkSetting[];
+  quickLinksTitle?: string | null;
+  quickLinks?: FooterLinkSetting[];
+  importantLinksTitle?: string | null;
+  importantLinks?: FooterLinkSetting[];
+  socialLinksTitle?: string | null;
+  socialLinks?: FooterSocialLinkSetting[];
+  deliveryPartnerTitle?: string | null;
+  deliveryPartnerFile?: string | null;
+  deliveryPartnerUrl?: string | null;
+  deliveryPartners?: FooterDeliveryPartnerSetting[];
+  paymentMethodsImageUrl?: string | null;
+}
+
+export interface FooterDeliveryPartnerSetting {
+  label: string;
+  imageUrl: string;
+}
+
+export interface FooterSocialLinkSetting extends FooterLinkSetting {
+  platform: string;
+  active?: boolean;
+}
+
+function toLinks(value: unknown): FooterLinkSetting[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((item) => item && typeof item === "object")
+    .map((item) => {
+      const link = item as Record<string, unknown>;
+      return {
+        label: String(link.label || link.name || "").trim(),
+        url: String(link.url || link.link || "#").trim() || "#",
+      };
+    })
+    .filter((item) => item.label);
+}
+
+function toSocialLinks(value: unknown): FooterSocialLinkSetting[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((item) => item && typeof item === "object")
+    .map((item) => {
+      const link = item as Record<string, unknown>;
+      const platform = String(link.platform || link.key || "").trim();
+      return {
+        platform,
+        label: String(link.label || link.name || platform || "").trim(),
+        url: String(link.url || link.link || "").trim(),
+        active: link.active !== false,
+      };
+    })
+    .filter((item) => item.active && item.label && item.url);
+}
+
+function toDeliveryPartners(value: unknown): FooterDeliveryPartnerSetting[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((item) => item && typeof item === "object")
+    .map((item) => {
+      const partner = item as Record<string, unknown>;
+      const imageUrl = toUrl(
+        typeof partner.imageUrl === "string"
+          ? partner.imageUrl
+          : typeof partner.url === "string"
+            ? partner.url
+            : typeof partner.file === "string"
+              ? partner.file
+              : null,
+      );
+      return {
+        label: String(partner.label || partner.name || "Delivery Partner").trim(),
+        imageUrl: imageUrl || "",
+      };
+    })
+    .filter((item) => item.imageUrl);
+}
+
+function toFooter(value: unknown): FooterSetting {
+  const d = value && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
+
+  const deliveryPartnerUrl = toUrl(
+    typeof d.deliveryPartnerUrl === "string" ? d.deliveryPartnerUrl : null,
+  );
+  const deliveryPartners = toDeliveryPartners(d.deliveryPartners);
+  if (deliveryPartnerUrl && !deliveryPartners.some((item) => item.imageUrl === deliveryPartnerUrl)) {
+    deliveryPartners.unshift({ label: "Delivery Partner", imageUrl: deliveryPartnerUrl });
+  }
+
+  return {
+    status: d.status !== false,
+    logoUrl: toUrl(typeof d.logoUrl === "string" ? d.logoUrl : null),
+    address: typeof d.address === "string" ? d.address : null,
+    phone: typeof d.phone === "string" ? d.phone : null,
+    email: typeof d.email === "string" ? d.email : null,
+    customerLinksTitle: typeof d.customerLinksTitle === "string" ? d.customerLinksTitle : null,
+    customerLinks: toLinks(d.customerLinks),
+    quickLinksTitle: typeof d.quickLinksTitle === "string" ? d.quickLinksTitle : null,
+    quickLinks: toLinks(d.quickLinks),
+    importantLinksTitle: typeof d.importantLinksTitle === "string" ? d.importantLinksTitle : null,
+    importantLinks: toLinks(d.importantLinks),
+    socialLinksTitle: typeof d.socialLinksTitle === "string" ? d.socialLinksTitle : null,
+    socialLinks: toSocialLinks(d.socialLinks),
+    deliveryPartnerTitle: typeof d.deliveryPartnerTitle === "string" ? d.deliveryPartnerTitle : null,
+    deliveryPartnerFile: typeof d.deliveryPartnerFile === "string" ? d.deliveryPartnerFile : null,
+    deliveryPartnerUrl,
+    deliveryPartners,
+    paymentMethodsImageUrl: toUrl(
+      typeof d.paymentMethodsImageUrl === "string" ? d.paymentMethodsImageUrl : null,
+    ),
+  };
 }
 
 export async function fetchSiteSettings(): Promise<SiteSetting> {
@@ -54,6 +182,7 @@ export async function fetchSiteSettings(): Promise<SiteSetting> {
     whatsappUrl: null, messengerUrl: null, telegramUrl: null,
     twitterUrl: null, linkedinUrl: null, tiktokUrl: null,
     deliveryPartnerUrl: null,
+    websiteFooter: {},
   };
   try {
     const res = await fetch(`${BASE}/site-settings/public`, { cache: "no-store", signal: AbortSignal.timeout(15_000) });
@@ -62,6 +191,7 @@ export async function fetchSiteSettings(): Promise<SiteSetting> {
     const d = json.data || {};
     const logoFile = d.logoFile || d.whiteLogo || d.darkLogo || null;
     const faviconFile = d.faviconFile || d.faviconLogo || null;
+    const websiteFooter = toFooter(d.websiteFooter);
     return {
       logoUrl:            toUrl(logoFile),
       faviconUrl:         toUrl(faviconFile),
@@ -93,7 +223,8 @@ export async function fetchSiteSettings(): Promise<SiteSetting> {
       twitterUrl:         d.twitterUrl         || d.xUrl || null,
       linkedinUrl:        d.linkedinUrl        || null,
       tiktokUrl:          d.tiktokUrl          || null,
-      deliveryPartnerUrl: toUrl(d.deliveryPartnerFile),
+      deliveryPartnerUrl: toUrl(d.deliveryPartnerFile) || websiteFooter.deliveryPartnerUrl || toUrl(websiteFooter.deliveryPartnerFile),
+      websiteFooter,
     };
   } catch {
     return empty;

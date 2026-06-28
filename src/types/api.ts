@@ -39,10 +39,17 @@ export interface ApiProduct {
 }
 
 export interface ApiVariant {
+  colorId?: number | null;
+  colorName?: string | null;
+  attribute?: string | null;
   size?: string[];
   color?: string[];
   weight?: number;
   unit?: string;
+  oldPrice?: number | string | null;
+  newPrice?: number | string | null;
+  stock?: number | string | null;
+  availability?: string | null;
 }
 
 // CustomerOrder

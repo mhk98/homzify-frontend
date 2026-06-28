@@ -103,6 +103,13 @@ const SOCIAL_DEFS = [
   },
 ];
 
+const DEFAULT_CUSTOMER_LINKS = [
+  { label: "Register", url: "/login?mode=register" },
+  { label: "Login", url: "/login" },
+  { label: "Forgot Password?", url: "/login" },
+  { label: "Contact", url: "/contact" },
+];
+
 function ColHeading({ children }: { children: React.ReactNode }) {
   return (
     <h3
@@ -153,17 +160,38 @@ export default function Footer({ settings }: Props) {
   const [resolvedSettings, setResolvedSettings] = useState<Partial<SiteSetting> | null>(settings || null);
   const [pages, setPages] = useState<WebsitePage[]>([]);
   const s = settings || resolvedSettings || {};
-  const socialLinks = SOCIAL_DEFS
-    .map((social) => ({ ...social, url: s[social.key] || null }))
-    .filter((social) => social.url);
-
   const logoUrl = s.logoUrl || null;
-  const deliveryPartnerUrl = s.deliveryPartnerUrl || null;
-  const address = s.address || null;
-  const phone = s.phone || null;
-  const email = s.email || null;
+  const footerConfig = s.websiteFooter || {};
+  const deliveryPartners = footerConfig.deliveryPartners?.length
+    ? footerConfig.deliveryPartners
+    : s.deliveryPartnerUrl
+      ? [{ label: "Delivery Partner", imageUrl: s.deliveryPartnerUrl }]
+      : [];
+  const socialLinks = footerConfig.socialLinks?.length
+    ? footerConfig.socialLinks.map((item) => {
+      const platform = item.platform.toLowerCase();
+      const def =
+        SOCIAL_DEFS.find((social) => social.key.toLowerCase().startsWith(platform)) ||
+        SOCIAL_DEFS.find((social) => social.name.toLowerCase().includes(platform)) ||
+        SOCIAL_DEFS[0];
+      return { ...def, name: item.label || def.name, url: item.url };
+    })
+    : SOCIAL_DEFS
+      .map((social) => ({ ...social, url: s[social.key] || null }))
+      .filter((social) => social.url);
+  const configuredUsefulLinks = [
+    ...(footerConfig.quickLinks || []),
+    ...(footerConfig.importantLinks || []),
+  ];
+  const customerLinks = footerConfig.customerLinks?.length
+    ? footerConfig.customerLinks
+    : DEFAULT_CUSTOMER_LINKS;
+  const address = footerConfig.address || s.address || null;
+  const phone = footerConfig.phone || s.phone || null;
+  const email = footerConfig.email || s.email || null;
   const copyright = s.copyrightText || null;
-  const hasContactInfo = Boolean(logoUrl || address || phone || email);
+  const footerLogoUrl = footerConfig.logoUrl || logoUrl;
+  const hasContactInfo = Boolean(footerLogoUrl || address || phone || email);
 
   // Split copyright into text + brand link if it contains "Developed By"
   const devIdx = copyright?.indexOf("Developed By") ?? -1;
@@ -186,6 +214,8 @@ export default function Footer({ settings }: Props) {
     fetchPublicPages().then(setPages).catch(() => setPages([]));
   }, []);
 
+  if (footerConfig.status === false) return null;
+
   return (
     <footer className="bg-white mt-4">
       <div
@@ -202,11 +232,11 @@ export default function Footer({ settings }: Props) {
         >
           {hasContactInfo && (
             <div>
-              {logoUrl && (
+              {footerLogoUrl && (
                 <Link href="/" style={{ display: "block", marginBottom: 16 }}>
                   <div className="relative" style={{ width: 150, height: 65 }}>
                     <Image
-                      src={logoUrl}
+                      src={footerLogoUrl}
                       alt="Logo"
                       fill
                       className="object-contain object-left"
@@ -233,11 +263,17 @@ export default function Footer({ settings }: Props) {
           )}
 
           {/* Col 2 — Useful Links */}
-          {pages.length > 0 && (
+          {(configuredUsefulLinks.length > 0 || pages.length > 0) && (
           <div>
-            <ColHeading>USEFUL LINK</ColHeading>
+            <ColHeading>{footerConfig.quickLinksTitle || "USEFUL LINK"}</ColHeading>
             <ul style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {pages.map((page) => (
+              {configuredUsefulLinks.length > 0
+                ? configuredUsefulLinks.map((link) => (
+                  <FooterLink key={`${link.label}-${link.url}`} href={link.url}>
+                    {link.label}
+                  </FooterLink>
+                ))
+                : pages.map((page) => (
                   <FooterLink key={page.Id} href={`/page/${page.slug}`}>
                     {page.title || page.name}
                   </FooterLink>
@@ -246,12 +282,26 @@ export default function Footer({ settings }: Props) {
           </div>
           )}
 
+          {/* Col 3 — Customer Links */}
+          {customerLinks.length > 0 && (
+          <div>
+            <ColHeading>{footerConfig.customerLinksTitle || "CUSTOMER LINK"}</ColHeading>
+            <ul style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {customerLinks.map((link) => (
+                <FooterLink key={`${link.label}-${link.url}`} href={link.url}>
+                  {link.label}
+                </FooterLink>
+              ))}
+            </ul>
+          </div>
+          )}
+
           {/* Col 4 — Follow Us + Delivery Partner */}
-          {(socialLinks.length > 0 || deliveryPartnerUrl) && (
+          {(socialLinks.length > 0 || deliveryPartners.length > 0) && (
           <div>
             {socialLinks.length > 0 && (
               <>
-                <ColHeading>FOLLOW US</ColHeading>
+                <ColHeading>{footerConfig.socialLinksTitle || "FOLLOW US"}</ColHeading>
                 <div
                   style={{
                     display: "flex",
@@ -283,17 +333,25 @@ export default function Footer({ settings }: Props) {
               </>
             )}
 
-            {deliveryPartnerUrl && (
+            {deliveryPartners.length > 0 && (
               <>
-                <ColHeading>DELIVERY PARTNER</ColHeading>
-                <div className="relative" style={{ width: 200, height: 55 }}>
-                  <Image
-                    src={deliveryPartnerUrl}
-                    alt="Delivery Partner"
-                    fill
-                    className="object-contain object-left"
-                    unoptimized
-                  />
+                <ColHeading>{footerConfig.deliveryPartnerTitle || "DELIVERY PARTNER"}</ColHeading>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                  {deliveryPartners.map((partner, index) => (
+                    <div
+                      key={`${partner.imageUrl}-${index}`}
+                      className="relative"
+                      style={{ width: 88, height: 42 }}
+                    >
+                      <Image
+                        src={partner.imageUrl}
+                        alt={partner.label || "Delivery Partner"}
+                        fill
+                        className="object-contain object-left"
+                        unoptimized
+                      />
+                    </div>
+                  ))}
                 </div>
               </>
             )}
