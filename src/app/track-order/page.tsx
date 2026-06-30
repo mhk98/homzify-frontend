@@ -28,23 +28,29 @@ interface TrackedOrder {
   advance?: number; items: TrackedOrderItem[] | string; createdAt: string; note?: string;
 }
 
-const STATUS_TONES = [
-  "#c2410c",
-  "#2563eb",
-  "#7c3aed",
-  "#6366f1",
-  "#16a34a",
-  "#dc2626",
-  "#d97706",
-  "#6b7280",
-];
+const STATUS_COLORS: Record<string, string> = {
+  pending: "#f97316",
+  packaging: "#2563eb",
+  confirmed: "#7c3aed",
+  in_courier: "#0891b2",
+  delivered: "#16a34a",
+  cancelled: "#dc2626",
+  returned: "#d97706",
+  on_hold: "#6b7280",
+  incomplete: "#e11d48",
+};
+
+function getStatusColor(key: string, index = 0) {
+  const fallbackColors = ["#f97316", "#2563eb", "#7c3aed", "#0891b2", "#16a34a", "#dc2626", "#d97706", "#6b7280"];
+  return STATUS_COLORS[key] || fallbackColors[Math.max(index, 0) % fallbackColors.length] || "#374151";
+}
 
 function getStatusMeta(status: string, statuses: OrderStatusOption[]) {
   const key = toOrderStatusKey(status);
   const index = statuses.findIndex((item) => item.key === key);
   return {
     label: statuses[index]?.label || status || "অজানা",
-    tone: STATUS_TONES[Math.max(index, 0) % STATUS_TONES.length] || "#374151",
+    tone: getStatusColor(key, index),
     index: Math.max(index, 0),
   };
 }
@@ -82,10 +88,11 @@ function StatusTimeline({ status, statuses }: { status: string; statuses: OrderS
       {visibleSteps.map((step, index) => {
         const stepIndex = statuses.findIndex((item) => item.key === step.key);
         const active = isStopped ? true : stepIndex <= meta.index;
+        const stepTone = getStatusColor(step.key, stepIndex);
         return (
           <div key={step.key} style={{ minWidth: 0 }}>
-            <div style={{ height: 6, borderRadius: 99, marginBottom: 8, background: active ? SECONDARY : "#e5e7eb" }} />
-            <p style={{ fontSize: 11, fontWeight: 700, color: active ? "#111827" : "#9ca3af", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            <div style={{ height: 6, borderRadius: 99, marginBottom: 8, background: active ? stepTone : "#e5e7eb" }} />
+            <p style={{ fontSize: 11, fontWeight: 700, color: active ? stepTone : "#9ca3af", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
               {step.label}
             </p>
           </div>

@@ -17,6 +17,15 @@ import { validateCoupon, type AppliedCoupon } from "@/services/couponService";
 
 const fmt = (v: number) => v.toLocaleString("en-US");
 
+function getCouponErrorMessage(error: unknown) {
+  const message = error instanceof Error ? error.message : "";
+  const lower = message.toLowerCase();
+  if (lower.includes("expired")) return "এই কুপনের মেয়াদ শেষ।";
+  if (lower.includes("minimum order amount")) return message.replace("Minimum order amount is", "এই কুপনের জন্য ন্যূনতম অর্ডার");
+  if (lower.includes("inactive")) return "এই কুপনটি এখন inactive।";
+  if (lower.includes("not found")) return "কুপন কোড পাওয়া যায়নি।";
+  return message || "কুপন প্রযোজ্য নয়।";
+}
 
 function CheckoutContent() {
   const { items, removeFromCart, updateQty, clearCart, totalPrice } = useCart();
@@ -79,7 +88,7 @@ function CheckoutContent() {
       setCouponMessage(`কুপন applied: ৳${fmt(result.discount)} discount`);
     } catch (error) {
       setAppliedCoupon(null);
-      setCouponMessage(error instanceof Error ? error.message : "কুপন প্রযোজ্য নয়।");
+      setCouponMessage(getCouponErrorMessage(error));
     } finally {
       setCouponLoading(false);
     }
