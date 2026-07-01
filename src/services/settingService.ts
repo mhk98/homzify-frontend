@@ -102,11 +102,11 @@ function toSocialLinks(value: unknown): FooterSocialLinkSetting[] {
       return {
         platform,
         label: String(link.label || link.name || platform || "").trim(),
-        url: String(link.url || link.link || "").trim(),
+        url: String(link.url || link.link || "#").trim() || "#",
         active: link.active !== false,
       };
     })
-    .filter((item) => item.active && item.label && item.url);
+    .filter((item) => item.active && item.label);
 }
 
 function toDeliveryPartners(value: unknown): FooterDeliveryPartnerSetting[] {

@@ -110,6 +110,17 @@ const DEFAULT_CUSTOMER_LINKS = [
   { label: "Contact", url: "/contact" },
 ];
 
+const DEFAULT_FOOTER_SOCIAL_KEYS = new Set([
+  "facebookUrl",
+  "instagramUrl",
+  "youtubeUrl",
+  "messengerUrl",
+  "telegramUrl",
+  "twitterUrl",
+  "linkedinUrl",
+  "tiktokUrl",
+]);
+
 function ColHeading({ children }: { children: React.ReactNode }) {
   return (
     <h3
@@ -168,16 +179,17 @@ export default function Footer({ settings }: Props) {
       ? [{ label: "Delivery Partner", imageUrl: s.deliveryPartnerUrl }]
       : [];
   const socialLinks = footerConfig.socialLinks?.length
-    ? footerConfig.socialLinks.map((item) => {
-      const platform = item.platform.toLowerCase();
+    ? footerConfig.socialLinks.map((item, index) => {
+      const platform = (item.platform || item.label || "").toLowerCase();
       const def =
         SOCIAL_DEFS.find((social) => social.key.toLowerCase().startsWith(platform)) ||
         SOCIAL_DEFS.find((social) => social.name.toLowerCase().includes(platform)) ||
         SOCIAL_DEFS[0];
-      return { ...def, name: item.label || def.name, url: item.url };
+      return { ...def, id: `${platform || def.name}-${index}`, name: item.label || def.name, url: item.url || "#" };
     })
     : SOCIAL_DEFS
-      .map((social) => ({ ...social, url: s[social.key] || null }))
+      .filter((social) => DEFAULT_FOOTER_SOCIAL_KEYS.has(social.key))
+      .map((social) => ({ ...social, id: social.key, url: s[social.key] || null }))
       .filter((social) => social.url);
   const configuredUsefulLinks = [
     ...(footerConfig.quickLinks || []),
@@ -203,10 +215,7 @@ export default function Footer({ settings }: Props) {
     devIdx >= 0 ? copyright!.slice(devIdx + "Developed By".length).trim() : "";
 
   useEffect(() => {
-    if (settings) {
-      setResolvedSettings(settings);
-      return;
-    }
+    if (settings) return;
     fetchSiteSettings().then(setResolvedSettings).catch(() => setResolvedSettings({}));
   }, [settings]);
 
@@ -312,10 +321,10 @@ export default function Footer({ settings }: Props) {
                 >
                   {socialLinks.map((social) => (
                   <a
-                    key={social.name}
+                    key={social.id}
                     href={social.url!}
-                    target="_blank"
-                    rel="noreferrer"
+                    target={social.url === "#" ? undefined : "_blank"}
+                    rel={social.url === "#" ? undefined : "noreferrer"}
                     title={social.name}
                     className="flex items-center justify-center text-white hover:opacity-80 transition-opacity"
                     style={{
