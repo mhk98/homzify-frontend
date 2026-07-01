@@ -147,7 +147,7 @@ export default async function ProductDetailPage({
                   <div className="seller-row">
                     <p className="seller-label">Sold by</p>
                     <div className="seller-meta">
-                      <p className="seller-name">Wazih</p>
+                      <p className="seller-name">Homzify</p>
                       {(settings as SiteSetting).whatsappUrl && (
                         <a
                           href={(settings as SiteSetting).whatsappUrl!}

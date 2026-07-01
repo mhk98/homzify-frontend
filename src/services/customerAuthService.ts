@@ -16,9 +16,12 @@ export interface CustomerAuthResult {
   user: CustomerAuthUser;
 }
 
-const phoneToEmail = (phone: string) => `${phone}@customer.wazih.local`;
+const phoneToEmail = (phone: string) => `${phone}@customer.homzify.local`;
 
-export async function loginCustomer(phone: string, password: string): Promise<CustomerAuthResult> {
+export async function loginCustomer(
+  phone: string,
+  password: string,
+): Promise<CustomerAuthResult> {
   const res = await apiFetch<ApiResponse<CustomerAuthResult>>("/user/login", {
     method: "POST",
     body: JSON.stringify({
@@ -30,7 +33,11 @@ export async function loginCustomer(phone: string, password: string): Promise<Cu
   return res.data;
 }
 
-export async function registerCustomer(fullName: string, phone: string, password: string): Promise<CustomerAuthUser> {
+export async function registerCustomer(
+  fullName: string,
+  phone: string,
+  password: string,
+): Promise<CustomerAuthUser> {
   const nameParts = fullName.trim().split(/\s+/);
   const firstName = nameParts.shift() || fullName.trim();
   const lastName = nameParts.join(" ");

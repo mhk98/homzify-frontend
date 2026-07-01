@@ -1,5 +1,11 @@
 "use client";
-import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
 import { Product } from "@/data/products";
 import { fetchProductById } from "@/services/productService";
 
@@ -16,7 +22,12 @@ export interface CartItem {
 
 interface CartContextValue {
   items: CartItem[];
-  addToCart: (product: Product, qty?: number, size?: string, color?: string) => void;
+  addToCart: (
+    product: Product,
+    qty?: number,
+    size?: string,
+    color?: string,
+  ) => void;
   removeFromCart: (index: number) => void;
   updateQty: (index: number, qty: number) => void;
   clearCart: () => void;
@@ -34,7 +45,7 @@ const CartContext = createContext<CartContextValue>({
   totalPrice: 0,
 });
 
-const CART_KEY = "wazih_cart";
+const CART_KEY = "homzify_cart";
 
 function loadCart(): CartItem[] {
   try {
@@ -63,11 +74,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setItems((prev) => {
         // match by id + size + color
         const idx = prev.findIndex(
-          (i) => i.id === product.id && i.size === size && i.color === color
+          (i) => i.id === product.id && i.size === size && i.color === color,
         );
         if (idx !== -1) {
           return prev.map((item, i) =>
-            i === idx ? { ...item, qty: item.qty + qty } : item
+            i === idx ? { ...item, qty: item.qty + qty } : item,
           );
         }
         return [
@@ -85,18 +96,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         ];
       });
     },
-    []
+    [],
   );
 
   useEffect(() => {
-    const missingShippingFlag = items.filter((item) => item.freeShipping === undefined);
+    const missingShippingFlag = items.filter(
+      (item) => item.freeShipping === undefined,
+    );
     if (missingShippingFlag.length === 0) return;
 
     let active = true;
     Promise.all(
       [...new Set(missingShippingFlag.map((item) => item.id))].map((id) =>
-        fetchProductById(id).then((product) => [id, Boolean(product?.freeShipping)] as const)
-      )
+        fetchProductById(id).then(
+          (product) => [id, Boolean(product?.freeShipping)] as const,
+        ),
+      ),
     )
       .then((entries) => {
         if (!active) return;
@@ -105,8 +120,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           prev.map((item) =>
             item.freeShipping === undefined
               ? { ...item, freeShipping: flags.get(item.id) || false }
-              : item
-          )
+              : item,
+          ),
         );
       })
       .catch(() => {});
@@ -122,7 +137,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const updateQty = useCallback((index: number, qty: number) => {
     if (qty < 1) return;
-    setItems((prev) => prev.map((item, i) => (i === index ? { ...item, qty } : item)));
+    setItems((prev) =>
+      prev.map((item, i) => (i === index ? { ...item, qty } : item)),
+    );
   }, []);
 
   const clearCart = useCallback(() => setItems([]), []);
@@ -132,7 +149,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ items, addToCart, removeFromCart, updateQty, clearCart, totalItems, totalPrice }}
+      value={{
+        items,
+        addToCart,
+        removeFromCart,
+        updateQty,
+        clearCart,
+        totalItems,
+        totalPrice,
+      }}
     >
       {children}
     </CartContext.Provider>
