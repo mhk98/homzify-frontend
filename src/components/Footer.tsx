@@ -155,7 +155,7 @@ function FooterLink({
           lineHeight: "24px",
           display: "block",
         }}
-        className="hover:text-[#10B8C4] transition-colors"
+        className="hover:text-[#C39A2B] transition-colors"
       >
         {children}
       </Link>
@@ -165,11 +165,14 @@ function FooterLink({
 
 interface Props {
   settings?: Partial<SiteSetting> | null;
+  // Fetched on the server by SiteFooter; skips the client request below.
+  pages?: WebsitePage[];
 }
 
-export default function Footer({ settings }: Props) {
+export default function Footer({ settings, pages: pagesProp }: Props) {
   const [resolvedSettings, setResolvedSettings] = useState<Partial<SiteSetting> | null>(settings || null);
-  const [pages, setPages] = useState<WebsitePage[]>([]);
+  const [fetchedPages, setFetchedPages] = useState<WebsitePage[]>([]);
+  const pages = pagesProp ?? fetchedPages;
   const s = settings || resolvedSettings || {};
   const logoUrl = s.logoUrl || null;
   const footerConfig = s.websiteFooter || {};
@@ -220,8 +223,9 @@ export default function Footer({ settings }: Props) {
   }, [settings]);
 
   useEffect(() => {
-    fetchPublicPages().then(setPages).catch(() => setPages([]));
-  }, []);
+    if (pagesProp) return;
+    fetchPublicPages().then(setFetchedPages).catch(() => setFetchedPages([]));
+  }, [pagesProp]);
 
   if (footerConfig.status === false) return null;
 
@@ -249,7 +253,6 @@ export default function Footer({ settings }: Props) {
                       alt="Logo"
                       fill
                       className="object-contain object-left"
-                      unoptimized
                     />
                   </div>
                 </Link>
@@ -357,7 +360,6 @@ export default function Footer({ settings }: Props) {
                         alt={partner.label || "Delivery Partner"}
                         fill
                         className="object-contain object-left"
-                        unoptimized
                       />
                     </div>
                   ))}
@@ -371,14 +373,14 @@ export default function Footer({ settings }: Props) {
 
       {/* Copyright */}
       {copyright && (
-      <div className="bg-black py-3.5 text-center">
+      <div className="bg-[#14203A] py-3.5 text-center">
         <p style={{ fontSize: 13, color: "#aaa" }}>
           {copyrightMain}{" "}
           {copyrightBrand && (
             <a
               href="#"
               className="hover:underline"
-              style={{ color: "#073763" }}
+              style={{ color: "#C39A2B" }}
             >
               {copyrightBrand}
             </a>

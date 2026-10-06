@@ -14,7 +14,7 @@ export default function PopupBanner({ banners = [] }: Props) {
 
   useEffect(() => {
     if (!banner) return;
-    const seenKey = `homzify_popup_banner_${banner.Id}`;
+    const seenKey = `kafela_popup_banner_${banner.Id}`;
     if (sessionStorage.getItem(seenKey)) return;
     const timer = window.setTimeout(() => setOpen(true), 800);
     return () => window.clearTimeout(timer);
@@ -23,7 +23,7 @@ export default function PopupBanner({ banners = [] }: Props) {
   if (!banner || !open) return null;
 
   const close = () => {
-    sessionStorage.setItem(`homzify_popup_banner_${banner.Id}`, "1");
+    sessionStorage.setItem(`kafela_popup_banner_${banner.Id}`, "1");
     setOpen(false);
   };
 
@@ -34,7 +34,7 @@ export default function PopupBanner({ banners = [] }: Props) {
       width={720}
       height={420}
       className="block h-auto w-full rounded"
-      unoptimized
+
       priority
     />
   );

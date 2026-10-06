@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 import Link from "next/link";
 import { Product } from "@/data/products";
 import OrderModal from "./OrderModal";
@@ -8,8 +8,9 @@ import { useCart } from "@/context/CartContext";
 import { useCustomer } from "@/context/CustomerContext";
 import { trackPixelEvent } from "@/lib/pixel";
 
-const PRIMARY   = "#073763";
-const SECONDARY = "#10B8C4";
+const PRIMARY   = "#1C2B4B";
+const SECONDARY = "#C39A2B";
+const ACCENT    = "#D7262E";
 const formatPrice = (value: number) => value.toLocaleString("en-US");
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -32,7 +33,12 @@ export default function ProductCard({ product }: { product: Product }) {
     : undefined;
 
   const handleAddToCart = () => {
-    addToCart(product);
+    // Products with several variants need a choice first.
+    if (product.hasVariants) {
+      setShowModal(true);
+      return;
+    }
+    addToCart(product, 1, product.variants?.[0]);
     setAdded(true);
     setTimeout(() => setAdded(false), 1200);
     trackPixelEvent("AddToCart", pixelProductData, pixelUserData);
@@ -40,7 +46,6 @@ export default function ProductCard({ product }: { product: Product }) {
 
   const handleOrderNow = () => {
     if (product.inStock === false) return;
-    trackPixelEvent("OrderNow", pixelProductData, pixelUserData);
     setShowModal(true);
   };
 
@@ -60,7 +65,7 @@ export default function ProductCard({ product }: { product: Product }) {
         {product.inStock !== false && product.discount > 0 && (
           <span
             className="absolute z-10 text-white font-bold leading-tight"
-            style={{ top: 6, left: 6, background: SECONDARY, borderRadius: 999, padding: "2px 7px", fontSize: 10 }}
+            style={{ top: 6, left: 6, background: ACCENT, borderRadius: 999, padding: "2px 7px", fontSize: 10 }}
           >
             -{product.discount}%
           </span>
@@ -77,20 +82,19 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <Link href={`/product/${product.id}`} className="block overflow-hidden">
           <div className="relative w-full bg-white" style={{ aspectRatio: "1 / 1" }}>
-            <Image
-              src={product.image}
+            <SafeImage
+              sources={[product.image, ...(product.gallery || [])]}
               alt={product.name}
               fill
               className="object-contain object-center p-1.5 transition-transform duration-300 group-hover:scale-105"
               draggable={false}
-              unoptimized
             />
           </div>
         </Link>
 
         <Link
           href={`/product/${product.id}`}
-          className="block overflow-hidden px-2 text-center font-medium text-[#222] transition-colors hover:text-[#073763]"
+          className="block overflow-hidden px-2 text-center font-medium text-[#222] transition-colors hover:text-[#1C2B4B]"
           style={{
             display: "-webkit-box",
             WebkitLineClamp: 2,
@@ -109,6 +113,7 @@ export default function ProductCard({ product }: { product: Product }) {
             ৳{formatPrice(product.originalPrice)}
           </span>
           <span className="font-extrabold" style={{ color: SECONDARY, fontSize: 13 }}>
+            {product.hasVariants && (product.priceMax ?? 0) > product.discountedPrice ? "From " : ""}
             ৳{formatPrice(product.discountedPrice)}
           </span>
         </div>

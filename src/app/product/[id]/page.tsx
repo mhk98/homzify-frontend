@@ -1,17 +1,26 @@
 import { notFound } from "next/navigation";
 import MarqueeBanner from "@/components/MarqueeBanner";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { SiteFooter } from "@/components/SiteChrome";
 import FloatingContact from "@/components/FloatingContact";
 import ScrollToTop from "@/components/ScrollToTop";
 import ProductDetailClient from "@/components/ProductDetailClient";
 import Container from "@/components/Container";
 import { fetchProductById } from "@/services/productService";
 import { fetchSiteSettings, type SiteSetting } from "@/services/settingService";
+import { fetchNavItems } from "@/services/menuService";
 import {
   fetchDeliveryCharges,
   getDeliveryChargeText,
 } from "@/services/shippingChargeService";
+
+// Render each product on its first visit, then serve it from the cache and
+// re-render in the background at most once a minute.
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return [];
+}
 
 export default async function ProductDetailPage({
   params,
@@ -22,10 +31,11 @@ export default async function ProductDetailPage({
   const productId = Number(id);
   if (isNaN(productId)) notFound();
 
-  const [product, settings, deliveryCharges] = await Promise.all([
-    fetchProductById(productId).catch(() => null),
+  const [product, settings, deliveryCharges, navItems] = await Promise.all([
+    fetchProductById(productId),
     fetchSiteSettings().catch(() => ({}) as Partial<SiteSetting>),
     fetchDeliveryCharges().catch(() => []),
+    fetchNavItems().catch(() => []),
   ]);
 
   if (!product) notFound();
@@ -33,7 +43,7 @@ export default async function ProductDetailPage({
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <MarqueeBanner text={(settings as SiteSetting).marqueeText ?? null} />
-      <Header logoUrl={(settings as SiteSetting).logoUrl ?? null} />
+      <Header logoUrl={(settings as SiteSetting).logoUrl ?? null} navItems={navItems} />
 
       <main className="flex-1 py-3">
         <Container>
@@ -147,7 +157,7 @@ export default async function ProductDetailPage({
                   <div className="seller-row">
                     <p className="seller-label">Sold by</p>
                     <div className="seller-meta">
-                      <p className="seller-name">Homzify</p>
+                      <p className="seller-name">Holy Deen</p>
                       {(settings as SiteSetting).whatsappUrl && (
                         <a
                           href={(settings as SiteSetting).whatsappUrl!}
@@ -178,7 +188,7 @@ export default async function ProductDetailPage({
         </Container>
       </main>
 
-      <Footer settings={settings as Partial<SiteSetting>} />
+      <SiteFooter />
       <FloatingContact settings={settings as Partial<SiteSetting>} />
       <ScrollToTop />
     </div>

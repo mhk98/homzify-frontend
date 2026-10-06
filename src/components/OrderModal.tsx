@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 import { useRouter } from "next/navigation";
 import { Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
-import { useCustomer } from "@/context/CustomerContext";
-import { trackPixelEvent } from "@/lib/pixel";
+import { useVariantSelection } from "@/lib/useVariantSelection";
+import VariantSelector from "@/components/VariantSelector";
 
 interface OrderModalProps {
   product: Product;
@@ -15,24 +15,15 @@ interface OrderModalProps {
 const formatPrice = (v: number) => v.toLocaleString("en-US");
 
 export default function OrderModal({ product, onClose }: OrderModalProps) {
-  const colors = product.colors ?? [];
-  const sizes  = product.sizes  ?? [];
-
-  const [selectedColor, setSelectedColor] = useState(colors[0] ?? "");
-  const [selectedSize,  setSelectedSize]  = useState(sizes[0]  ?? "");
+  const selection = useVariantSelection(product);
+  const canBuy = selection.inStock && !selection.needsSelection;
   const [qty, setQty] = useState(1);
   const { addToCart } = useCart();
-  const { customer } = useCustomer();
   const router = useRouter();
 
   const handleOrder = () => {
-    trackPixelEvent(
-      "InitiateCheckout",
-      { content_ids: [product.id], content_name: product.name, content_type: "product",
-        value: product.discountedPrice * qty, currency: "BDT", num_items: qty },
-      customer ? { customerId: customer.Id, name: customer.name, phone: customer.phone } : undefined
-    );
-    addToCart(product, qty, selectedSize || undefined, selectedColor || undefined);
+    if (!canBuy) return;
+    addToCart(product, qty, selection.selectedVariant);
     onClose();
     router.push("/checkout");
   };
@@ -51,7 +42,7 @@ export default function OrderModal({ product, onClose }: OrderModalProps) {
           className="absolute -top-4 -right-4 z-20 flex items-center justify-center text-white font-bold"
           style={{
             width: 36, height: 36, borderRadius: "50%",
-            background: "#e02020", fontSize: 20, lineHeight: 1,
+            background: "#D7262E", fontSize: 20, lineHeight: 1,
             boxShadow: "0 2px 8px rgba(0,0,0,0.35)",
           }}
         >
@@ -62,7 +53,7 @@ export default function OrderModal({ product, onClose }: OrderModalProps) {
         <div
           className="flex items-center"
           style={{
-            background: "#1B3A5C", borderRadius: "8px 8px 0 0",
+            background: "#1C2B4B", borderRadius: "8px 8px 0 0",
             height: 58, paddingLeft: 28, paddingRight: 28,
           }}
         >
@@ -79,10 +70,11 @@ export default function OrderModal({ product, onClose }: OrderModalProps) {
             <div className="relative shrink-0 self-start border border-gray-200 overflow-hidden rounded"
               style={{ width: "clamp(110px, 35vw, 200px)", height: "clamp(110px, 35vw, 200px)" }}
             >
-              <Image
-                src={product.image} alt={product.name}
+              <SafeImage
+                sources={[selection.selectedVariant?.image, product.image, ...(product.gallery || [])]}
+                alt={product.name}
                 fill
-                className="object-cover" unoptimized
+                className="object-cover"
               />
             </div>
 
@@ -91,62 +83,21 @@ export default function OrderModal({ product, onClose }: OrderModalProps) {
 
               {/* Price */}
               <div className="flex items-baseline gap-3">
-                <span className="text-gray-400 line-through text-base">
-                  ৳{formatPrice(product.originalPrice)}
-                </span>
+                {selection.oldPrice > selection.newPrice && (
+                  <span className="text-gray-400 line-through text-base">
+                    ৳{formatPrice(selection.oldPrice)}
+                  </span>
+                )}
                 <span className="font-extrabold text-3xl text-gray-900">
-                  ৳{formatPrice(product.discountedPrice)}
+                  ৳{formatPrice(selection.newPrice)}
                 </span>
               </div>
 
-              {/* Color */}
-              {colors.length > 0 && (
-                <div>
-                  <p className="text-sm font-semibold text-gray-700 mb-2">Select Color</p>
-                  <div className="flex gap-2 flex-wrap">
-                    {colors.map((c) => (
-                      <button
-                        key={c}
-                        onClick={() => setSelectedColor(c)}
-                        className="font-semibold transition-colors text-sm"
-                        style={{
-                          height: 36, padding: "0 14px",
-                          border: `1.5px solid ${selectedColor === c ? "#1B3A5C" : "#ccc"}`,
-                          borderRadius: 4,
-                          background: selectedColor === c ? "#1B3A5C" : "#fff",
-                          color: selectedColor === c ? "#fff" : "#444",
-                        }}
-                      >
-                        {c}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Size */}
-              {sizes.length > 0 && (
-                <div>
-                  <p className="text-sm font-semibold text-gray-700 mb-2">Select Size</p>
-                  <div className="flex gap-2 flex-wrap">
-                    {sizes.map((s) => (
-                      <button
-                        key={s}
-                        onClick={() => setSelectedSize(s)}
-                        className="font-semibold transition-colors text-sm"
-                        style={{
-                          width: 44, height: 36,
-                          border: `1.5px solid ${selectedSize === s ? "#1B3A5C" : "#ccc"}`,
-                          borderRadius: 4,
-                          background: selectedSize === s ? "#1B3A5C" : "#fff",
-                          color: selectedSize === s ? "#fff" : "#444",
-                        }}
-                      >
-                        {s}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              <VariantSelector selection={selection} />
+              {!canBuy && (
+                <p className="text-sm font-semibold text-red-600">
+                  {selection.needsSelection ? "এই combination পাওয়া যাচ্ছে না" : "এই variant-টি এখন stock-এ নেই"}
+                </p>
               )}
 
               {/* Quantity + Order Now */}
@@ -177,8 +128,9 @@ export default function OrderModal({ product, onClose }: OrderModalProps) {
                 {/* Order Now button */}
                 <button
                   onClick={handleOrder}
-                  className="flex-1 text-white font-bold tracking-wide transition-opacity hover:opacity-90"
-                  style={{ background: "#1B3A5C", borderRadius: 4, height: 42, fontSize: 15 }}
+                  disabled={!canBuy}
+                  className="flex-1 text-white font-bold tracking-wide transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                  style={{ background: "#1C2B4B", borderRadius: 4, height: 42, fontSize: 15 }}
                 >
                   + ORDER NOW
                 </button>

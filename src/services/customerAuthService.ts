@@ -16,7 +16,7 @@ export interface CustomerAuthResult {
   user: CustomerAuthUser;
 }
 
-const phoneToEmail = (phone: string) => `${phone}@customer.homzify.local`;
+const phoneToEmail = (phone: string) => `${phone}@customer.kafela.local`;
 
 export async function loginCustomer(
   phone: string,

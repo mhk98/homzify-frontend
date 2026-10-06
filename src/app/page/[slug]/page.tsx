@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { SiteFooter } from "@/components/SiteChrome";
 import FloatingContact from "@/components/FloatingContact";
 import MarqueeBanner from "@/components/MarqueeBanner";
 import { fetchPublicPageBySlug, fetchPublicPages } from "@/services/pageService";
 import { fetchSiteSettings, type SiteSetting } from "@/services/settingService";
+import { fetchNavItems } from "@/services/menuService";
 
 export const dynamic = "force-dynamic";
 
@@ -33,9 +34,10 @@ export default async function DynamicWebsitePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [page, settings] = await Promise.all([
+  const [page, settings, navItems] = await Promise.all([
     fetchPublicPageBySlug(slug),
     fetchSiteSettings().catch(() => ({}) as Partial<SiteSetting>),
+    fetchNavItems().catch(() => []),
   ]);
 
   if (!page) notFound();
@@ -45,7 +47,7 @@ export default async function DynamicWebsitePage({
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <MarqueeBanner text={(settings as SiteSetting).marqueeText ?? null} />
-      <Header logoUrl={(settings as SiteSetting).logoUrl ?? null} />
+      <Header logoUrl={(settings as SiteSetting).logoUrl ?? null} navItems={navItems} />
 
       <main className="flex-1 py-10">
         <article
@@ -80,7 +82,7 @@ export default async function DynamicWebsitePage({
         </article>
       </main>
 
-      <Footer settings={settings as Partial<SiteSetting>} />
+      <SiteFooter />
       <FloatingContact settings={settings as Partial<SiteSetting>} />
     </div>
   );
