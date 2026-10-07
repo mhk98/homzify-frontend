@@ -60,7 +60,6 @@ function toImageUrl(file?: string | null) {
   return `${IMAGES}/${value.replace(/^images\//, "")}`;
 }
 
-
 function buildProductOptions(
   page: LandingPageData,
   image: string,
@@ -69,10 +68,15 @@ function buildProductOptions(
   const configured = Array.isArray(regularData.productOptions)
     ? (regularData.productOptions as LandingProductOption[])
     : [];
+  const freeShippingIds = new Set(page.freeShippingProductIds || []);
+  // Mirrors linkedProductId in the backend's getLandingOptions().
+  const isFreeShipping = (linkedId?: string | number | null) =>
+    Boolean(linkedId) && freeShippingIds.has(Number(linkedId));
   const options = configured
     .map((item, index) => ({
       id: String(item.productId || item.id || index),
       productId: item.productId || item.id || page.productId || page.Id,
+      freeShipping: isFreeShipping(item.productId || page.productId),
       name: String(
         item.name || page.product || page.title || "Landing Product",
       ),
@@ -91,6 +95,7 @@ function buildProductOptions(
     {
       id: String(page.productId || page.Id),
       productId: page.productId || page.Id,
+      freeShipping: isFreeShipping(page.productId),
       name: page.product || page.title || "Product",
       price: toNumber(page.price, 0),
       originalPrice: toNumber(page.originalPrice, 0),
@@ -102,9 +107,9 @@ function buildProductOptions(
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params;
   const page = await fetchLandingPage(id);
-  if (!page) return { title: "Landing Page - Holy Deen" };
+  if (!page) return { title: "Landing Page - Homzify" };
   return {
-    title: `${page.title} - Holy Deen`,
+    title: `${page.title} - Homzify`,
     description: stripHtml(
       page.shortDescription || page.description || page.subTitle || "",
     ),
@@ -162,10 +167,10 @@ export default async function LandingPage({ params }: PageProps) {
     toNumber(productOptions[0]?.originalPrice, 0);
   const hasReviewSection = Boolean(
     reviewHeading ||
-      reviewSubHeading ||
-      reviewRegularPriceLabel ||
-      reviewOfferPriceLabel ||
-      reviewButtonText,
+    reviewSubHeading ||
+    reviewRegularPriceLabel ||
+    reviewOfferPriceLabel ||
+    reviewButtonText,
   );
   const buttonStyle = {
     backgroundColor: colors.buttonColor,

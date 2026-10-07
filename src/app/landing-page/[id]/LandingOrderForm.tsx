@@ -13,6 +13,7 @@ export interface LandingOrderOption {
   price: number;
   originalPrice: number;
   image: string;
+  freeShipping?: boolean;
 }
 
 interface SelectedProduct extends LandingOrderOption {
@@ -99,8 +100,14 @@ export default function LandingOrderForm({
   const beginCheckoutTrackedRef = useRef(false);
   const leadTrackedOrderIdRef = useRef<number | undefined>(undefined);
 
-  const deliveryCharge =
-    shipping === "inside" ? deliveryInside : deliveryOutside;
+  // Delivery is free only when every selected product is marked free shipping.
+  const freeShipping =
+    selected.length > 0 && selected.every((item) => item.freeShipping);
+  const deliveryCharge = freeShipping
+    ? 0
+    : shipping === "inside"
+      ? deliveryInside
+      : deliveryOutside;
   const subtotal = useMemo(
     () => selected.reduce((sum, item) => sum + item.price * item.qty, 0),
     [selected],
@@ -483,7 +490,8 @@ export default function LandingOrderForm({
                   >
                     ●
                   </span>{" "}
-                  {labels.insideDhakaLabel} {formatMoney(deliveryInside)} টাকা
+                  {labels.insideDhakaLabel}{" "}
+                  {freeShipping ? "ফ্রি ডেলিভারি" : `${formatMoney(deliveryInside)} টাকা`}
                 </span>
               </button>
               <button
@@ -501,7 +509,8 @@ export default function LandingOrderForm({
                   >
                     ●
                   </span>{" "}
-                  {labels.outsideDhakaLabel} {formatMoney(deliveryOutside)} টাকা
+                  {labels.outsideDhakaLabel}{" "}
+                  {freeShipping ? "ফ্রি ডেলিভারি" : `${formatMoney(deliveryOutside)} টাকা`}
                 </span>
               </button>
             </div>

@@ -155,7 +155,7 @@ function FooterLink({
           lineHeight: "24px",
           display: "block",
         }}
-        className="hover:text-[#C39A2B] transition-colors"
+        className="hover:text-[#00AEBD] transition-colors"
       >
         {children}
       </Link>
@@ -380,7 +380,7 @@ export default function Footer({ settings, pages: pagesProp }: Props) {
             <a
               href="#"
               className="hover:underline"
-              style={{ color: "#C39A2B" }}
+              style={{ color: "#00AEBD" }}
             >
               {copyrightBrand}
             </a>

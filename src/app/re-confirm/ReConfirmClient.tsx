@@ -21,8 +21,8 @@ const normalizePhoneNumber = (value: string) =>
     .replace(/[০-৯]/g, (digit) => String("০১২৩৪৫৬৭৮৯".indexOf(digit)))
     .replace(/\D/g, "");
 
-const PRIMARY = "#1C2B4B";
-const GOLD = "#C39A2B";
+const PRIMARY = "#0A2B57";
+const GOLD = "#00AEBD";
 const SOFT_GOLD = "#FBF3DE";
 const TEXT = "#111827";
 const MUTED = "#4b5563";
@@ -174,7 +174,7 @@ function ReConfirmContent({ header, footer }: SiteChromeSlots) {
                   fontWeight: 600,
                 }}
               >
-                Holy Deen এর সাথে থাকার জন্য জাযাকাল্লাহ খাইরান
+                Homzify এর সাথে থাকার জন্য জাযাকাল্লাহ খাইরান
               </p>
               <div
                 style={{
@@ -184,7 +184,7 @@ function ReConfirmContent({ header, footer }: SiteChromeSlots) {
                   border: `1px solid ${GOLD}33`,
                   borderRadius: 10,
                   padding: "42px 34px",
-                  boxShadow: "0 18px 42px rgba(28, 43, 75, 0.10)",
+                  boxShadow: "0 18px 42px rgba(10, 43, 87, 0.10)",
                 }}
               >
                 <div
@@ -238,7 +238,7 @@ function ReConfirmContent({ header, footer }: SiteChromeSlots) {
                     fontSize: 18,
                     fontWeight: 800,
                     textDecoration: "none",
-                    boxShadow: "0 10px 22px rgba(28, 43, 75, 0.20)",
+                    boxShadow: "0 10px 22px rgba(10, 43, 87, 0.20)",
                   }}
                 >
                   অর্ডার ট্র্যাক করুন
@@ -269,7 +269,7 @@ function ReConfirmContent({ header, footer }: SiteChromeSlots) {
                   fontWeight: 600,
                 }}
               >
-                Holy Deen এর সাথে থাকার জন্য জাযাকাল্লাহ খাইরান
+                Homzify এর সাথে থাকার জন্য জাযাকাল্লাহ খাইরান
               </p>
 
               <div
@@ -280,7 +280,7 @@ function ReConfirmContent({ header, footer }: SiteChromeSlots) {
                   border: `1px solid ${GOLD}33`,
                   borderRadius: 10,
                   padding: "34px 34px 36px",
-                  boxShadow: "0 18px 42px rgba(28, 43, 75, 0.10)",
+                  boxShadow: "0 18px 42px rgba(10, 43, 87, 0.10)",
                   textAlign: "center",
                 }}
               >
@@ -341,7 +341,7 @@ function ReConfirmContent({ header, footer }: SiteChromeSlots) {
                       fontSize: "clamp(18px, 2.6vw, 24px)",
                       fontWeight: 900,
                       cursor: loading ? "not-allowed" : "pointer",
-                      boxShadow: "0 10px 22px rgba(28, 43, 75, 0.20)",
+                      boxShadow: "0 10px 22px rgba(10, 43, 87, 0.20)",
                     }}
                   >
                     {loading ? "OTP পাঠানো হচ্ছে..." : "Re-Confirm Order"}

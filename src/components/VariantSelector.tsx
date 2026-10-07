@@ -1,7 +1,7 @@
 "use client";
 import type { VariantSelection } from "@/lib/useVariantSelection";
 
-const PRIMARY = "#1C2B4B";
+const PRIMARY = "#0A2B57";
 
 export default function VariantSelector({ selection }: { selection: VariantSelection }) {
   const { optionGroups, selected, select, valueState } = selection;

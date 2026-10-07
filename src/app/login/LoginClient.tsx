@@ -8,8 +8,8 @@ import { apiFetch } from "@/lib/api";
 import { ApiResponse } from "@/types/api";
 import { useCustomer, type CustomerInfo } from "@/context/CustomerContext";
 
-const PRIMARY = "#1C2B4B";
-const SECONDARY = "#C39A2B";
+const PRIMARY = "#0A2B57";
+const SECONDARY = "#00AEBD";
 
 type Mode = "login" | "register";
 
@@ -110,7 +110,7 @@ export default function CustomerLoginPage({ header, footer }: SiteChromeSlots) {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        background: "#F8F6F0",
+        background: "#F3F8FA",
       }}
     >
       <MarqueeBanner />

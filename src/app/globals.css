@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/* Brand palette, taken from the Homzify logo */
+@theme {
+  --color-brand-navy: #0A2B57;
+  --color-brand-teal: #00AEBD;
+  --color-brand-charcoal: #333333;
+  --color-brand-surface: #F3F8FA;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -13,7 +21,7 @@
 }
 
 body {
-  background-color: #F8F6F0;
+  background-color: #F3F8FA;
   font-family: "Lato", Arial, Helvetica, sans-serif;
   font-size: 15px;
   color: #333;
@@ -363,9 +371,9 @@ body {
 }
 
 .track-order-input:focus {
-  border-color: #1C2B4B;
+  border-color: #0A2B57;
   background: #fff;
-  box-shadow: 0 0 0 4px rgba(28, 43, 75, 0.12);
+  box-shadow: 0 0 0 4px rgba(10, 43, 87, 0.12);
 }
 
 .track-order-button {
@@ -639,7 +647,7 @@ body {
   margin: 0 0 16px 22px;
 }
 .dynamic-page-content a {
-  color: #1C2B4B;
+  color: #0A2B57;
   text-decoration: underline;
 }
 .dynamic-page-content .policy-intro {

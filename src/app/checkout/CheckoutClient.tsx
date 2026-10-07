@@ -93,7 +93,7 @@ function CheckoutContent({ header, footer }: SiteChromeSlots) {
       id: "cod" as const,
       label: "Cash on Delivery",
       number: null,
-      bg: "#C39A2B",
+      bg: "#00AEBD",
     },
     {
       id: "bkash" as const,
@@ -381,7 +381,7 @@ function CheckoutContent({ header, footer }: SiteChromeSlots) {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        background: "#F8F6F0",
+        background: "#F3F8FA",
       }}
     >
       {header}
@@ -399,7 +399,7 @@ function CheckoutContent({ header, footer }: SiteChromeSlots) {
               }}
             >
               {/* Brand header */}
-              <div style={{ background: "#C39A2B", padding: "18px 28px" }}>
+              <div style={{ background: "#00AEBD", padding: "18px 28px" }}>
                 <p
                   style={{
                     color: "#fff",
@@ -665,7 +665,7 @@ function CheckoutContent({ header, footer }: SiteChromeSlots) {
                       style={{
                         margin: "6px 0 0",
                         fontSize: 13,
-                        color: "#C39A2B",
+                        color: "#00AEBD",
                         fontWeight: 500,
                       }}
                     >
@@ -784,7 +784,7 @@ function CheckoutContent({ header, footer }: SiteChromeSlots) {
                   onClick={handleConfirm}
                   disabled={loading}
                   style={{
-                    background: loading ? "#aaa" : "#1C2B4B",
+                    background: loading ? "#aaa" : "#0A2B57",
                     color: "#fff",
                     border: "none",
                     borderRadius: 8,
@@ -1142,7 +1142,7 @@ function CheckoutContent({ header, footer }: SiteChromeSlots) {
                     onClick={handleApplyCoupon}
                     disabled={couponLoading}
                     style={{
-                      background: couponLoading ? "#9ca3af" : "#C39A2B",
+                      background: couponLoading ? "#9ca3af" : "#00AEBD",
                       color: "#fff",
                       border: "none",
                       borderRadius: 8,

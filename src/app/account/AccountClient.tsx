@@ -11,8 +11,8 @@ import { ApiResponse } from "@/types/api";
 import { useCustomer } from "@/context/CustomerContext";
 import CustomerAvatar from "@/components/CustomerAvatar";
 
-const PRIMARY = "#1C2B4B";
-const SECONDARY = "#C39A2B";
+const PRIMARY = "#0A2B57";
+const SECONDARY = "#00AEBD";
 
 interface OrderItem { name: string; image?: string; qty: number; price: number; variant?: string; size?: string; color?: string; }
 interface Order {
@@ -274,7 +274,7 @@ export default function AccountPage({ header, footer }: SiteChromeSlots) {
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "#F8F6F0" }}>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "#F3F8FA" }}>
       <MarqueeBanner />
       {header}
 

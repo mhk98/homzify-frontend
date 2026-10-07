@@ -43,7 +43,10 @@ export default async function ProductDetailPage({
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <MarqueeBanner text={(settings as SiteSetting).marqueeText ?? null} />
-      <Header logoUrl={(settings as SiteSetting).logoUrl ?? null} navItems={navItems} />
+      <Header
+        logoUrl={(settings as SiteSetting).logoUrl ?? null}
+        navItems={navItems}
+      />
 
       <main className="flex-1 py-3">
         <Container>
@@ -157,7 +160,7 @@ export default async function ProductDetailPage({
                   <div className="seller-row">
                     <p className="seller-label">Sold by</p>
                     <div className="seller-meta">
-                      <p className="seller-name">Holy Deen</p>
+                      <p className="seller-name">Homzify</p>
                       {(settings as SiteSetting).whatsappUrl && (
                         <a
                           href={(settings as SiteSetting).whatsappUrl!}

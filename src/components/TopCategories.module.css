@@ -44,7 +44,7 @@
 .card:hover .image { transform: scale(1.035); }
 .card:hover .label { color: #96701a; }
 .card:focus-visible {
-  outline: 2px solid #c39a2b;
+  outline: 2px solid #00AEBD;
   outline-offset: -2px;
   border-radius: 5px;
 }
