@@ -10,6 +10,10 @@ import {
   LandingProductOption,
 } from "@/services/landingPageService";
 import { fetchSiteSettings, type SiteSetting } from "@/services/settingService";
+import {
+  fetchDeliveryCharges,
+  getDeliveryChargeForDistrict,
+} from "@/services/shippingChargeService";
 import LandingOrderForm, { LandingOrderOption } from "./LandingOrderForm";
 
 type PageProps = {
@@ -118,10 +122,11 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function LandingPage({ params }: PageProps) {
   const { id } = await params;
-  const [page, settings, header] = await Promise.all([
+  const [page, settings, header, deliveryCharges] = await Promise.all([
     fetchLandingPage(id),
     fetchSiteSettings().catch(() => ({}) as Partial<SiteSetting>),
     fetchLandingHeader(),
+    fetchDeliveryCharges(),
   ]);
   if (!page) notFound();
 
@@ -145,8 +150,9 @@ export default async function LandingPage({ params }: PageProps) {
     regularData.orderTitle ||
       "অর্ডার করতে আপনার সঠিক তথ্য দিয়ে নিচের ফর্মটি সম্পূর্ণ পূরণ করুন।",
   );
-  const deliveryInside = toNumber(regularData.deliveryInside, 70);
-  const deliveryOutside = toNumber(regularData.deliveryOutside, 130);
+  // Same rates as the website checkout (panel Delivery Charge settings).
+  const deliveryInside = getDeliveryChargeForDistrict(deliveryCharges, "dhaka");
+  const deliveryOutside = getDeliveryChargeForDistrict(deliveryCharges, "outside");
   const headingItems = buildHeadingItems(regularData.headings);
   const featureSectionTitle = String(regularData.featureSectionTitle || "");
   const featureImages = buildFeatureImages(
